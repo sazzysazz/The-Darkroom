@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0"
+    />
     <title>The Darkroom — Vintage Photo Booth</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Special+Elite&family=Courier+Prime:ital@0;1&display=swap"
@@ -14,23 +17,28 @@
         --sepia-light: #d4b896;
         --sepia: #8b6914;
         --dark: #1a100a;
-        --darker: #0d0805;
         --warm: #c4622d;
-        --paper: #ede0c4;
         --panel: #1f1209;
       }
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* ── PAGE SHELL ─────────────────────────────────────── */
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
       }
       body {
         background: radial-gradient(circle at top, #20120a 0, #050303 58%);
         color: var(--cream);
         font-family: "Courier Prime", monospace;
-        min-height: 100vh;
-        overflow-x: hidden;
-        cursor: default;
+        display: flex;
+        flex-direction: column;
       }
       body::before {
         content: "";
@@ -42,64 +50,65 @@
         opacity: 0.35;
       }
 
-      /* ---- HEADER ---- */
+      /* ── HEADER ─────────────────────────────────────────── */
       header {
-        text-align: center;
-        padding: 24px 20px 14px;
+        height: 60px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
         border-bottom: 1px solid #2a1e12;
-        background: linear-gradient(to bottom, #140c06, rgba(13, 8, 5, 0.9));
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        backdrop-filter: blur(10px);
+        background: linear-gradient(to bottom, #140c06, rgba(13, 8, 5, 0.95));
+        position: relative;
+        z-index: 100;
       }
       .logo {
         font-family: "Playfair Display", serif;
-        font-size: 2.2rem;
+        font-size: 1.6rem;
         font-style: italic;
         font-weight: 900;
-        color: var(--cream);
         letter-spacing: 0.02em;
       }
       .logo span {
         color: var(--warm);
       }
       .tagline {
-        font-size: 0.75rem;
-        letter-spacing: 0.32em;
+        font-size: 0.58rem;
+        letter-spacing: 0.3em;
         color: var(--sepia);
         text-transform: uppercase;
-        margin-top: 4px;
+        margin-top: 1px;
       }
 
-      /* ---- STEPS BAR ---- */
+      /* ── STEPS BAR ───────────────────────────────────────── */
       .steps-bar {
+        height: 52px;
+        flex-shrink: 0;
         display: flex;
-        justify-content: center;
         align-items: center;
-        padding: 12px 16px;
+        justify-content: center;
         background: #100906;
         border-bottom: 1px solid #2a1e12;
-        flex-wrap: wrap;
-        gap: 4px;
-        position: sticky;
-        top: 84px;
-        z-index: 18;
-        backdrop-filter: blur(10px);
+        z-index: 99;
+        gap: 2px;
+        padding: 0 8px;
       }
       .step {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 6px 16px;
+        gap: 5px;
+        padding: 5px 10px;
         font-family: "Special Elite", cursive;
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: #4a3020;
         border-radius: 999px;
         border: 1px solid transparent;
         transition: all 0.25s;
+        cursor: pointer;
+        white-space: nowrap;
       }
       .step.active {
         color: var(--cream);
@@ -109,36 +118,40 @@
       .step.done {
         color: var(--sepia-light);
         border-color: rgba(139, 105, 20, 0.35);
-        background: rgba(10, 6, 4, 0.8);
       }
       .step-num {
-        width: 20px;
-        height: 20px;
+        width: 17px;
+        height: 17px;
         border-radius: 50%;
         border: 1px solid currentColor;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.65rem;
+        font-size: 0.58rem;
         flex-shrink: 0;
       }
       .step-arrow {
         color: #2a1e12;
-        font-size: 0.75rem;
-        padding: 0 4px;
+        font-size: 0.7rem;
       }
 
-      /* ---- MAIN LAYOUT ---- */
+      /* ── SCROLL WRAPPER (steps 1,2,4) ───────────────────── */
+      .app-scroll {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
       .app-container {
-        max-width: 1100px;
+        max-width: 920px;
         margin: 0 auto;
-        padding: 32px 20px 60px;
+        padding: 18px 14px 48px;
       }
 
-      /* ---- PANELS ---- */
+      /* Panels inside the scroll area */
       .panel {
         display: none;
-        animation: panelIn 0.5s ease;
+        animation: panelIn 0.3s ease;
       }
       .panel.active {
         display: block;
@@ -146,243 +159,210 @@
       @keyframes panelIn {
         from {
           opacity: 0;
-          transform: translateY(16px);
+          transform: translateY(8px);
         }
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
-
-      /* ---- PANEL TITLES ---- */
       .panel-title {
         font-family: "Playfair Display", serif;
-        font-size: 1.8rem;
+        font-size: 1.4rem;
         font-style: italic;
         font-weight: 700;
-        margin-bottom: 6px;
+        margin-bottom: 2px;
       }
       .panel-subtitle {
-        font-size: 0.82rem;
+        font-size: 0.72rem;
         color: var(--sepia-light);
         letter-spacing: 0.1em;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
         font-style: italic;
         text-transform: uppercase;
       }
 
-      /* ---- LAYOUT CHOOSER ---- */
-      .layout-section-title {
-        font-family: "Special Elite", cursive;
-        font-size: 0.7rem;
-        letter-spacing: 0.35em;
-        text-transform: uppercase;
-        color: var(--sepia);
-        margin: 26px 0 12px;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-      .layout-section-title::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: #2a1e12;
-      }
-      .layout-section-title:first-child {
-        margin-top: 0;
+      /* ── CAMERA PANEL ────────────────────────────────────── */
+      /*
+  FIX: #panel-camera is always display:none by default.
+  It is removed from the flex column flow entirely until step 3.
+  On mobile it becomes position:fixed (full viewport).
+  On desktop it becomes a flex child that fills remaining height.
+*/
+      #panel-camera {
+        display: none; /* ALWAYS hidden until .active is added */
+        flex-shrink: 0;
       }
 
-      .layout-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin-bottom: 8px;
+      /* MOBILE: fixed fullscreen — camera fills screen, controls at bottom */
+      @media (max-width: 640px) {
+        /* When NOT active on mobile, ensure it truly takes no space */
+        #panel-camera:not(.active) {
+          display: none !important;
+          position: static !important;
+          height: 0 !important;
+          overflow: hidden !important;
+        }
+        /* Hide the desktop wrapper (which contains a second "Ready for your close-up" title) */
+        .cam-desktop-wrap {
+          display: none !important;
+        }
+        #panel-camera.active {
+          display: flex !important;
+          flex-direction: column;
+          position: fixed;
+          inset: 0;
+          z-index: 500;
+          background: #050303;
+          overflow: hidden;
+        }
+
+        .cam-body {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          overflow: hidden;
+          min-height: 0;
+        }
+        /* Video fills all space */
+        .camera-wrap {
+          flex: 1;
+          min-height: 0;
+          border: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+        }
+        .camera-wrap video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        /* Footer inside video area */
+        .cam-video-footer {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: linear-gradient(transparent, rgba(5, 3, 3, 0.85));
+          padding: 8px 12px 6px;
+          pointer-events: none;
+        }
+        .shot-tracker {
+          pointer-events: all;
+        }
+        .cam-status {
+          font-size: 0.62rem;
+          color: var(--sepia-light);
+          font-style: italic;
+          padding-top: 2px;
+        }
+        /* Controls bar at very bottom */
+        .cam-controls-bar {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 14px 12px;
+          background: rgba(8, 4, 2, 0.96);
+          border-top: 1px solid #2a1e12;
+          flex-shrink: 0;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .cam-ctrl-desktop-only {
+          display: none !important;
+        }
+        .retake-strip {
+          display: none !important;
+        }
+        .timer-btns .btn-sm {
+          padding: 5px 8px;
+          font-size: 0.56rem;
+        }
+        .shutter-wrap {
+          margin-left: auto !important;
+          flex-shrink: 0;
+        }
+        .shutter-btn {
+          width: 56px !important;
+          height: 56px !important;
+          font-size: 1.3rem !important;
+        }
+        /* Hide desktop sidebar layout */
+        .cam-sidebar-desktop {
+          display: none !important;
+        }
       }
 
-      .layout-card {
-        border: 2px solid #2a1e12;
-        cursor: pointer;
-        text-align: center;
-        background: radial-gradient(
-          circle at top,
-          #261409 0,
-          #150b05 45%,
-          #0f0904 100%
-        );
-        transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
-        position: relative;
-        padding: 14px 14px 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        min-width: 130px;
-      }
-      .layout-card:hover {
-        border-color: var(--sepia);
-        transform: translateY(-2px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
-      }
-      .layout-card.selected {
-        border-color: var(--warm);
-        background: radial-gradient(
-          circle at top,
-          #35200f 0,
-          #201107 40%,
-          #130a05 100%
-        );
-        box-shadow:
-          0 0 0 1px var(--warm),
-          0 10px 30px rgba(196, 98, 45, 0.2);
-      }
-      .layout-card.selected .lc-check {
-        opacity: 1;
-      }
-      .lc-check {
-        position: absolute;
-        top: 7px;
-        right: 8px;
-        width: 20px;
-        height: 20px;
-        background: var(--warm);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.65rem;
-        color: #fff;
-        opacity: 0;
-        transition: opacity 0.2s;
-        font-weight: bold;
-      }
-
-      .lc-strip-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 4px;
-      }
-      .lc-strip-canvas {
-        display: block;
-      }
-
-      .lc-info {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-        width: 100%;
-      }
-      .lc-name {
-        font-family: "Playfair Display", serif;
-        font-size: 0.78rem;
-        font-style: italic;
-        font-weight: 700;
-        color: var(--cream);
-        white-space: nowrap;
-      }
-      .lc-meta {
-        font-family: "Special Elite", cursive;
-        font-size: 0.58rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--sepia);
-      }
-      .lc-badge {
-        font-family: "Special Elite", cursive;
-        font-size: 0.52rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        background: rgba(139, 105, 20, 0.18);
-        color: var(--sepia-light);
-        padding: 2px 8px;
-        border: 1px solid #3a2a12;
+      /* DESKTOP: camera left, controls right */
+      @media (min-width: 641px) {
+        #panel-camera.active {
+          display: block;
+          flex: 1;
+          overflow-y: auto;
+          padding: 0;
+        }
+        .cam-top-bar {
+          display: none;
+        }
+        .cam-desktop-wrap {
+          max-width: 920px;
+          margin: 0 auto;
+          padding: 18px 14px 48px;
+        }
+        .cam-body {
+          display: grid;
+          grid-template-columns: 1fr 190px;
+          gap: 14px;
+          align-items: start;
+        }
+        .camera-col-inner {
+          display: flex;
+          flex-direction: column;
+        }
+        .camera-wrap {
+          position: relative;
+          background: #000;
+          overflow: hidden;
+          border: 3px solid #2a1e12;
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+        }
+        .camera-wrap video {
+          width: 100%;
+          display: block;
+          background: #000;
+        }
+        .cam-video-footer {
+          padding: 0;
+        }
+        .cam-controls-bar {
+          display: none;
+        }
+        .cam-sidebar-desktop {
+          background: rgba(15, 9, 5, 0.9);
+          border: 1px solid #2a1e12;
+          padding: 11px;
+          display: flex;
+          flex-direction: column;
+          gap: 9px;
+          border-radius: 4px;
+        }
+        .shutter-wrap {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+        }
+        /* Hide the mobile-only camera area on desktop */
+        #camera-area {
+          display: none !important;
+        }
+        #cam-error {
+          display: none !important;
+        }
       }
 
-      /* ---- FILTER CHOOSER ---- */
-      .filter-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 12px;
-        margin-bottom: 28px;
-      }
-      .filter-card {
-        border: 2px solid #2a1e12;
-        cursor: pointer;
-        overflow: hidden;
-        transition: all 0.2s;
-        background: var(--panel);
-        position: relative;
-      }
-      .filter-card:hover {
-        border-color: var(--sepia);
-        transform: translateY(-2px);
-      }
-      .filter-card.selected {
-        border-color: var(--warm);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      }
-      .filter-card.selected::after {
-        content: "✓";
-        position: absolute;
-        top: 4px;
-        right: 6px;
-        color: var(--warm);
-        font-size: 0.75rem;
-        background: rgba(0, 0, 0, 0.6);
-        width: 18px;
-        height: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-      }
-      .filter-thumb {
-        width: 100%;
-        aspect-ratio: 1;
-        background: linear-gradient(135deg, #8b6030, #3a2010);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        position: relative;
-        overflow: hidden;
-      }
-      .filter-name {
-        font-family: "Special Elite", cursive;
-        font-size: 0.6rem;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--sepia-light);
-        padding: 6px;
-        text-align: center;
-      }
-
-      /* ---- CAMERA ---- */
-      .camera-area {
-        display: grid;
-        grid-template-columns: minmax(0, 1.15fr) minmax(220px, 0.85fr);
-        gap: 28px;
-        align-items: flex-start;
-      }
-      .camera-wrap {
-        position: relative;
-        background: #000;
-        overflow: hidden;
-        border: 3px solid #2a1e12;
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
-      }
-      .camera-wrap canvas,
-      .camera-wrap video {
-        width: 100%;
-        display: block;
-      }
-      #video-feed {
-        width: 100%;
-        display: block;
-        background: #000;
-      }
+      /* Shared camera styles */
       #camera-canvas {
         display: none;
       }
@@ -395,22 +375,21 @@
       .camera-overlay::after {
         content: "";
         position: absolute;
-        width: 30px;
-        height: 30px;
-        border-color: rgba(245, 234, 214, 0.5);
+        width: 26px;
+        height: 26px;
+        border-color: rgba(245, 234, 214, 0.42);
         border-style: solid;
       }
       .camera-overlay::before {
-        top: 10px;
-        left: 10px;
+        top: 8px;
+        left: 8px;
         border-width: 2px 0 0 2px;
       }
       .camera-overlay::after {
-        bottom: 10px;
-        right: 10px;
+        bottom: 8px;
+        right: 8px;
         border-width: 0 2px 2px 0;
       }
-
       .countdown-display {
         position: absolute;
         inset: 0;
@@ -419,7 +398,7 @@
         justify-content: center;
         background: rgba(0, 0, 0, 0.4);
         font-family: "Playfair Display", serif;
-        font-size: 5.5rem;
+        font-size: 5rem;
         font-weight: 900;
         color: var(--cream);
         opacity: 0;
@@ -430,11 +409,10 @@
       .countdown-display.show {
         opacity: 1;
       }
-
       .flash-overlay {
         position: absolute;
         inset: 0;
-        background: white;
+        background: #fff;
         opacity: 0;
         pointer-events: none;
         z-index: 20;
@@ -443,13 +421,11 @@
       .flash-overlay.flash {
         opacity: 1;
       }
-
       .shot-tracker {
         display: flex;
-        gap: 8px;
-        margin-top: 12px;
-        align-items: center;
+        gap: 5px;
         flex-wrap: wrap;
+        margin-top: 6px;
       }
       .shot-dot {
         width: 32px;
@@ -460,7 +436,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.6rem;
+        font-size: 0.56rem;
         color: #4a3020;
         font-family: "Special Elite", cursive;
         transition: all 0.3s;
@@ -468,7 +444,6 @@
       }
       .shot-dot.taken {
         border-color: var(--warm);
-        background: #2e1a0a;
       }
       .shot-dot img {
         width: 100%;
@@ -485,47 +460,787 @@
           box-shadow: 0 0 0 0 rgba(245, 234, 214, 0.4);
         }
         50% {
-          box-shadow: 0 0 0 6px rgba(245, 234, 214, 0);
+          box-shadow: 0 0 0 5px rgba(245, 234, 214, 0);
         }
       }
-
-      .cam-controls {
+      .retake-strip {
         display: flex;
-        flex-direction: column;
-        gap: 12px;
-        min-width: 220px;
-        background: rgba(15, 9, 5, 0.9);
-        border: 1px solid #2a1e12;
-        padding: 14px 16px;
+        gap: 4px;
+        margin-top: 5px;
+        flex-wrap: wrap;
+      }
+      .retake-single {
+        flex: 1;
+        min-width: 58px;
+        background: transparent;
+        border: 1px solid #3a2a18;
+        color: #6a5040;
+        font-size: 0.5rem;
+        font-family: "Special Elite", cursive;
+        letter-spacing: 0.1em;
+        padding: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        border-radius: 3px;
+      }
+      .retake-single:hover {
+        border-color: var(--sepia);
+        color: var(--sepia-light);
+      }
+      .retake-single:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .cam-status {
+        font-size: 0.68rem;
+        color: var(--sepia);
+        font-style: italic;
+        text-align: center;
+        margin-top: 5px;
+        min-height: 16px;
+      }
+      .cam-error {
+        padding: 22px 14px;
+        text-align: center;
+        background: var(--panel);
+        border: 1px dashed #3a2a18;
+        display: none;
+        border-radius: 4px;
+        margin-bottom: 12px;
+      }
+      .cam-error.show {
+        display: block;
+      }
+      .cam-error .icon {
+        font-size: 2rem;
+        margin-bottom: 7px;
+      }
+      .cam-error p {
+        color: var(--sepia-light);
+        font-size: 0.82rem;
+        line-height: 1.6;
       }
       .ctrl-label {
         font-family: "Special Elite", cursive;
-        font-size: 0.65rem;
-        letter-spacing: 0.25em;
+        font-size: 0.58rem;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
         color: var(--sepia);
-        margin-bottom: 4px;
+        margin-bottom: 3px;
+      }
+      .timer-btns {
+        display: flex;
+        gap: 3px;
+        flex-wrap: wrap;
+      }
+      .shutter-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--cream);
+        border: 4px solid var(--sepia);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        transition: all 0.15s;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+      }
+      .shutter-btn:hover {
+        transform: scale(1.06);
+        box-shadow: 0 6px 18px rgba(196, 98, 45, 0.4);
+      }
+      .shutter-btn:active {
+        transform: scale(0.94);
+      }
+      .shutter-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .shutter-label {
+        font-family: "Special Elite", cursive;
+        font-size: 0.52rem;
+        letter-spacing: 0.15em;
+        color: #4a3020;
+        text-transform: uppercase;
       }
 
-      /* ---- BUTTONS ---- */
+      /* ── CAROUSEL ────────────────────────────────────────── */
+      .layout-carousel-section {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        margin-bottom: 6px;
+        user-select: none;
+      }
+      .carousel-arrow {
+        flex-shrink: 0;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: rgba(245, 234, 214, 0.05);
+        border: 1.5px solid #3a2a18;
+        color: var(--cream);
+        font-size: 1.6rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        line-height: 1;
+      }
+      .carousel-arrow:hover {
+        background: rgba(245, 234, 214, 0.12);
+        border-color: var(--sepia-light);
+      }
+      .carousel-arrow:active {
+        transform: scale(0.9);
+      }
+      .carousel-arrow:disabled {
+        opacity: 0.15;
+        cursor: not-allowed;
+      }
+      .carousel-track-outer {
+        flex: 1;
+        overflow: hidden;
+      }
+      .carousel-track {
+        display: flex;
+        align-items: flex-start;
+        transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+      }
+      .layout-slide {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 8px 6px 4px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .layout-card {
+        width: 100%;
+        border: 2.5px solid #2a1e12;
+        background: #0d0804;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s,
+          opacity 0.3s,
+          transform 0.3s;
+        position: relative;
+        border-radius: 4px;
+        overflow: hidden;
+        opacity: 0.4;
+        transform: scale(0.92);
+      }
+      .layout-card canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      @keyframes selectPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(196, 98, 45, 0.8);
+        }
+        70% {
+          box-shadow: 0 0 0 16px rgba(196, 98, 45, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 16px rgba(196, 98, 45, 0);
+        }
+      }
+      .layout-card.active-slide {
+        border-color: var(--warm);
+        box-shadow:
+          0 0 0 1px var(--warm),
+          0 10px 30px rgba(196, 98, 45, 0.3);
+        opacity: 1;
+        transform: scale(1);
+      }
+      .layout-card.just-selected {
+        animation: selectPulse 0.5s ease-out;
+      }
+      .layout-card:hover {
+        opacity: 0.7;
+      }
+      .layout-card.active-slide:hover {
+        opacity: 1;
+      }
+      .lc-check {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 20px;
+        height: 20px;
+        background: var(--warm);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6rem;
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.2s;
+        font-weight: bold;
+        z-index: 2;
+      }
+      .layout-card.active-slide .lc-check {
+        opacity: 1;
+      }
+      .slide-info {
+        text-align: center;
+        margin-top: 8px;
+        opacity: 0.35;
+        transition: opacity 0.3s;
+      }
+      .layout-slide.is-active .slide-info {
+        opacity: 1;
+      }
+      .lc-name {
+        font-family: "Playfair Display", serif;
+        font-size: 0.88rem;
+        font-style: italic;
+        font-weight: 700;
+        color: var(--cream);
+        display: block;
+        margin-bottom: 2px;
+      }
+      .lc-size {
+        font-family: "Special Elite", cursive;
+        font-size: 0.56rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--sepia-light);
+        display: block;
+        line-height: 1.5;
+      }
+      .carousel-dots {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .carousel-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #2a1e12;
+        cursor: pointer;
+        transition: all 0.25s;
+        border: 1px solid #3a2a18;
+      }
+      .carousel-dot.active {
+        background: var(--warm);
+        border-color: var(--warm);
+        width: 20px;
+        border-radius: 3px;
+      }
+
+      /* ── FILTER STEP ─────────────────────────────────────── */
+      .filter-stage {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .filter-live-preview {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        border: 2px solid #2a1e12;
+        overflow: hidden;
+        background: #000;
+        border-radius: 4px;
+        aspect-ratio: 4/3;
+      }
+      .filter-live-preview video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .filter-live-label {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.65);
+        padding: 3px 12px;
+        font-family: "Special Elite", cursive;
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--cream);
+        border-radius: 999px;
+        backdrop-filter: blur(4px);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .filter-cam-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .filter-cam-overlay::before,
+      .filter-cam-overlay::after {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        border-color: rgba(245, 234, 214, 0.38);
+        border-style: solid;
+      }
+      .filter-cam-overlay::before {
+        top: 7px;
+        left: 7px;
+        border-width: 2px 0 0 2px;
+      }
+      .filter-cam-overlay::after {
+        bottom: 7px;
+        right: 7px;
+        border-width: 0 2px 2px 0;
+      }
+      .filter-scroll-area {
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: thin;
+        scrollbar-color: #2a1e12 transparent;
+      }
+      .filter-scroll-area::-webkit-scrollbar {
+        height: 3px;
+      }
+      .filter-scroll-area::-webkit-scrollbar-thumb {
+        background: #3a2a18;
+        border-radius: 3px;
+      }
+      .filter-row {
+        display: flex;
+        gap: 9px;
+        width: max-content;
+        padding: 2px 0;
+      }
+      .filter-card {
+        width: 76px;
+        flex-shrink: 0;
+        border: 2px solid #2a1e12;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all 0.2s;
+        background: var(--panel);
+        position: relative;
+        border-radius: 4px;
+      }
+      .filter-card:hover {
+        border-color: var(--sepia);
+        transform: translateY(-2px);
+      }
+      .filter-card.selected {
+        border-color: var(--warm);
+        box-shadow: 0 0 0 1px rgba(196, 98, 45, 0.5);
+      }
+      .filter-card.selected::after {
+        content: "✓";
+        position: absolute;
+        top: 3px;
+        right: 4px;
+        color: var(--warm);
+        font-size: 0.6rem;
+        background: rgba(0, 0, 0, 0.6);
+        width: 15px;
+        height: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+      .filter-thumb {
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        overflow: hidden;
+        background: linear-gradient(135deg, #6b4c2a, #3a2010, #1a0d05);
+      }
+      .filter-name {
+        font-family: "Special Elite", cursive;
+        font-size: 0.52rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--sepia-light);
+        padding: 4px;
+        text-align: center;
+      }
+
+      /* ── RESULT STEP ─────────────────────────────────────── */
+      .result-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 275px;
+        gap: 18px;
+        align-items: start;
+      }
+      @media (max-width: 680px) {
+        .result-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+      .strip-preview-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 11px;
+      }
+      @media (min-width: 681px) {
+        .strip-preview-area {
+          position: sticky;
+          top: 0;
+        }
+      }
+      .strip-preview-wrap {
+        position: relative;
+        display: inline-block;
+      }
+      #result-canvas {
+        display: block;
+        max-height: 68vh;
+        width: auto;
+        max-width: 100%;
+        box-shadow:
+          0 10px 36px rgba(0, 0, 0, 0.65),
+          0 0 0 1px rgba(139, 105, 20, 0.3);
+      }
+      #sticker-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+      }
+      .placed-sticker {
+        position: absolute;
+        cursor: move;
+        user-select: none;
+        pointer-events: all;
+        line-height: 1;
+        filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.5));
+      }
+      .placed-sticker .del-btn {
+        position: absolute;
+        top: -7px;
+        right: -7px;
+        width: 15px;
+        height: 15px;
+        background: #c44040;
+        border-radius: 50%;
+        font-size: 8px;
+        color: #fff;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .placed-sticker:hover .del-btn {
+        display: flex;
+      }
+      .customize-panel {
+        background: var(--panel);
+        border: 1px solid #2a1e12;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .cp-section {
+        border-bottom: 1px solid #2a1e12;
+        padding: 12px 14px;
+      }
+      .cp-section:last-child {
+        border-bottom: none;
+      }
+      .cp-title {
+        font-family: "Special Elite", cursive;
+        font-size: 0.6rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--sepia);
+        margin-bottom: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .cp-title span {
+        color: var(--sepia-light);
+        font-size: 0.55rem;
+      }
+      .border-swatches {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .border-swatch {
+        width: 22px;
+        height: 22px;
+        border-radius: 3px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.15s;
+        position: relative;
+      }
+      .border-swatch:hover {
+        transform: scale(1.18);
+        border-color: var(--cream) !important;
+      }
+      .border-swatch.selected::after {
+        content: "✓";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.55rem;
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+      }
+      .border-swatch.selected {
+        border-color: var(--cream) !important;
+      }
+      .custom-color-wrap {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 7px;
+      }
+      .custom-color-wrap input[type="color"] {
+        width: 26px;
+        height: 26px;
+        border: 1px solid #3a2a18;
+        background: none;
+        cursor: pointer;
+        padding: 2px;
+        border-radius: 3px;
+      }
+      .custom-color-wrap label {
+        font-size: 0.62rem;
+        color: var(--sepia-light);
+        font-family: "Special Elite", cursive;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .sticker-tabs {
+        display: flex;
+        gap: 3px;
+        flex-wrap: wrap;
+        margin-bottom: 7px;
+      }
+      .sticker-tab {
+        font-family: "Special Elite", cursive;
+        font-size: 0.52rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 7px;
+        border: 1px solid #3a2a18;
+        background: transparent;
+        color: var(--sepia-light);
+        cursor: pointer;
+        transition: all 0.15px;
+        border-radius: 3px;
+      }
+      .sticker-tab.active {
+        background: rgba(139, 105, 20, 0.2);
+        border-color: var(--sepia);
+        color: var(--cream);
+      }
+      .sticker-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .sticker-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.15rem;
+        background: #140c06;
+        border: 1px solid #2a1e12;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        border-radius: 3px;
+      }
+      .sticker-btn:hover {
+        background: #2a1808;
+        border-color: var(--sepia);
+        transform: scale(1.1);
+      }
+      .cp-input {
+        width: 100%;
+        background: #140c06;
+        border: 1px solid #3a2a18;
+        color: var(--cream);
+        padding: 6px 9px;
+        font-family: "Courier Prime", monospace;
+        font-size: 0.76rem;
+        outline: none;
+        transition: border-color 0.2s;
+        border-radius: 3px;
+      }
+      .cp-input:focus {
+        border-color: var(--sepia);
+      }
+      .cp-input::placeholder {
+        color: #4a3020;
+      }
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 6px;
+      }
+      .toggle-label {
+        font-size: 0.72rem;
+        color: var(--sepia-light);
+      }
+      .toggle {
+        position: relative;
+        width: 34px;
+        height: 19px;
+        flex-shrink: 0;
+      }
+      .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-slider {
+        position: absolute;
+        inset: 0;
+        background: #2a1e12;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .toggle-slider::before {
+        content: "";
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #5a4030;
+        top: 3px;
+        left: 3px;
+        transition: all 0.2s;
+      }
+      .toggle input:checked + .toggle-slider {
+        background: rgba(139, 105, 20, 0.5);
+      }
+      .toggle input:checked + .toggle-slider::before {
+        transform: translateX(15px);
+        background: var(--warm);
+      }
+      .font-select {
+        background: #140c06;
+        border: 1px solid #3a2a18;
+        color: var(--cream);
+        padding: 5px 8px;
+        font-size: 0.7rem;
+        width: 100%;
+        outline: none;
+        margin-top: 5px;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+      .email-form {
+        border: 1px solid #2a1e12;
+        padding: 10px;
+        background: #140c06;
+        margin-top: 5px;
+        border-radius: 3px;
+      }
+      .email-form input {
+        width: 100%;
+        background: #0d0805;
+        border: 1px solid #3a2a18;
+        color: var(--cream);
+        padding: 7px 9px;
+        font-family: "Courier Prime", monospace;
+        font-size: 0.76rem;
+        margin-bottom: 6px;
+        outline: none;
+        transition: border-color 0.2s;
+        border-radius: 3px;
+      }
+      .email-form input:focus {
+        border-color: var(--sepia);
+      }
+      .email-form input::placeholder {
+        color: #4a3020;
+      }
+      .success-msg {
+        background: rgba(139, 105, 20, 0.15);
+        border: 1px solid var(--sepia);
+        padding: 6px 11px;
+        font-size: 0.7rem;
+        color: var(--sepia-light);
+        text-align: center;
+        display: none;
+        margin-top: 5px;
+        border-radius: 3px;
+      }
+      .success-msg.show {
+        display: block;
+      }
+      .frame-swatches {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .frame-swatch {
+        width: 36px;
+        height: 36px;
+        border: 2px solid #2a1e12;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        border-radius: 6px;
+      }
+      .frame-swatch:hover {
+        border-color: var(--sepia);
+      }
+      .frame-swatch.selected {
+        border-color: var(--warm);
+        box-shadow: 0 0 0 1px rgba(196, 98, 45, 0.5);
+      }
+
+      /* ── BUTTONS ─────────────────────────────────────────── */
       .btn {
         font-family: "Special Elite", cursive;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
         border: none;
         cursor: pointer;
         transition: all 0.15s;
-        font-size: 0.78rem;
-        padding: 12px 24px;
+        font-size: 0.7rem;
+        padding: 9px 18px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 5px;
         border-radius: 999px;
       }
       .btn-gold {
         background: var(--cream);
-        color: var(--dark);
+        color: #1a100a;
         box-shadow: 0 3px 0 var(--sepia);
       }
       .btn-gold:hover {
@@ -543,7 +1258,7 @@
       }
       .btn-ghost:hover {
         border-color: var(--sepia);
-        background: rgba(139, 105, 20, 0.12);
+        background: rgba(139, 105, 20, 0.1);
       }
       .btn-danger {
         background: transparent;
@@ -551,11 +1266,14 @@
         border: 1px solid #4a2020;
       }
       .btn-danger:hover {
-        background: rgba(196, 64, 64, 0.12);
+        background: rgba(196, 64, 64, 0.1);
       }
-      .btn-big {
-        padding: 14px 34px;
-        font-size: 0.85rem;
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.62rem;
+      }
+      .btn-full {
+        width: 100%;
       }
       .btn:disabled {
         opacity: 0.4;
@@ -563,484 +1281,16 @@
         transform: none !important;
         box-shadow: none !important;
       }
-      .btn-full {
-        width: 100%;
-      }
-
-      .shutter-btn {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        background: var(--cream);
-        border: 4px solid var(--sepia);
-        cursor: pointer;
+      .action-row {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        transition: all 0.15s;
-        box-shadow:
-          0 4px 16px rgba(0, 0, 0, 0.5),
-          inset 0 2px 4px rgba(255, 255, 255, 0.3);
-        align-self: center;
-      }
-      .shutter-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 20px rgba(196, 98, 45, 0.4);
-      }
-      .shutter-btn:active {
-        transform: scale(0.95);
-      }
-      .shutter-btn:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-        transform: none;
-      }
-
-      /* ---- STRIP PREVIEW / RESULT ---- */
-      .customize-layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.9fr);
-        gap: 32px;
-        align-items: flex-start;
-      }
-      @media (max-width: 820px) {
-        .customize-layout {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .strip-preview-area {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
-        position: sticky;
-        top: 140px;
-      }
-      .strip-preview-wrap {
-        position: relative;
-        display: inline-block;
-        cursor: crosshair;
-      }
-      #result-canvas {
-        display: block;
-        max-height: 75vh;
-        width: auto;
-        max-width: 100%;
-        box-shadow:
-          0 12px 48px rgba(0, 0, 0, 0.7),
-          0 0 0 1px rgba(139, 105, 20, 0.3);
-      }
-      #sticker-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        pointer-events: none;
-      }
-      .placed-sticker {
-        position: absolute;
-        font-size: 2rem;
-        cursor: move;
-        user-select: none;
-        pointer-events: all;
-        transform-origin: center center;
-        line-height: 1;
-        filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.5));
-        transition: transform 0.1s;
-      }
-      .placed-sticker:hover {
-        transform: scale(1.15);
-      }
-      .placed-sticker .del-btn {
-        position: absolute;
-        top: -8px;
-        right: -8px;
-        width: 16px;
-        height: 16px;
-        background: #c44040;
-        border-radius: 50%;
-        font-size: 9px;
-        color: white;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-style: normal;
-      }
-      .placed-sticker:hover .del-btn {
-        display: flex;
-      }
-
-      .customize-panel {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        background: var(--panel);
-        border: 1px solid #2a1e12;
-      }
-      .cp-section {
-        border-bottom: 1px solid #2a1e12;
-        padding: 16px 18px;
-      }
-      .cp-section:last-child {
-        border-bottom: none;
-      }
-      .cp-title {
-        font-family: "Special Elite", cursive;
-        font-size: 0.65rem;
-        letter-spacing: 0.3em;
-        text-transform: uppercase;
-        color: var(--sepia);
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .cp-title span {
-        color: var(--sepia-light);
-        font-size: 0.6rem;
-      }
-
-      .border-swatches {
-        display: flex;
+        gap: 7px;
         flex-wrap: wrap;
-        gap: 6px;
+        margin-top: 14px;
       }
-      .border-swatch {
-        width: 28px;
-        height: 28px;
-        border-radius: 3px;
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.15s;
-        position: relative;
-      }
-      .border-swatch:hover {
-        transform: scale(1.15);
-        border-color: var(--cream) !important;
-      }
-      .border-swatch.selected::after {
-        content: "✓";
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.65rem;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-      }
-      .border-swatch.selected {
-        border-color: var(--cream) !important;
-      }
-
-      .custom-color-wrap {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 8px;
-      }
-      .custom-color-wrap input[type="color"] {
-        width: 32px;
-        height: 32px;
-        border: 1px solid #3a2a18;
-        background: none;
-        cursor: pointer;
-        padding: 2px;
-        border-radius: 3px;
-      }
-      .custom-color-wrap label {
-        font-size: 0.7rem;
-        color: var(--sepia-light);
-        font-family: "Special Elite", cursive;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-      }
-
-      .sticker-tabs {
-        display: flex;
-        gap: 4px;
-        margin-bottom: 10px;
-        flex-wrap: wrap;
-      }
-      .sticker-tab {
-        font-family: "Special Elite", cursive;
-        font-size: 0.58rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        padding: 4px 10px;
-        border: 1px solid #3a2a18;
-        background: transparent;
-        color: var(--sepia-light);
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .sticker-tab.active {
-        background: rgba(139, 105, 20, 0.2);
-        border-color: var(--sepia);
-        color: var(--cream);
-      }
-      .sticker-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-      .sticker-btn {
-        width: 38px;
-        height: 38px;
-        font-size: 1.4rem;
-        background: #140c06;
-        border: 1px solid #2a1e12;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.15s;
-        border-radius: 3px;
-      }
-      .sticker-btn:hover {
-        background: #2a1808;
-        border-color: var(--sepia);
-        transform: scale(1.1);
-      }
-
-      .cp-input {
-        flex: 1;
-        background: #140c06;
-        border: 1px solid #3a2a18;
-        color: var(--cream);
-        padding: 8px 12px;
-        font-family: "Courier Prime", monospace;
-        font-size: 0.82rem;
-        outline: none;
-        transition: border-color 0.2s;
-        width: 100%;
-      }
-      .cp-input:focus {
-        border-color: var(--sepia);
-      }
-      .cp-input::placeholder {
-        color: #4a3020;
-      }
-
-      .toggle-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 8px;
-      }
-      .toggle-label {
-        font-size: 0.78rem;
-        color: var(--sepia-light);
-        font-family: "Courier Prime", monospace;
-      }
-      .toggle {
-        position: relative;
-        width: 40px;
-        height: 22px;
-        flex-shrink: 0;
-      }
-      .toggle input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-      .toggle-slider {
-        position: absolute;
-        inset: 0;
-        background: #2a1e12;
-        border-radius: 11px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      .toggle-slider::before {
-        content: "";
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #5a4030;
-        top: 3px;
-        left: 3px;
-        transition: all 0.2s;
-      }
-      .toggle input:checked + .toggle-slider {
-        background: rgba(139, 105, 20, 0.5);
-      }
-      .toggle input:checked + .toggle-slider::before {
-        transform: translateX(18px);
-        background: var(--warm);
-      }
-
-      .font-select {
-        background: #140c06;
-        border: 1px solid #3a2a18;
-        color: var(--cream);
-        padding: 6px 10px;
-        font-size: 0.78rem;
-        width: 100%;
-        outline: none;
-        margin-top: 6px;
-        cursor: pointer;
-      }
-
-      .email-form {
-        border: 1px solid #2a1e12;
-        padding: 14px;
-        background: #140c06;
-        margin-top: 8px;
-      }
-      .email-form input {
-        width: 100%;
-        background: #0d0805;
-        border: 1px solid #3a2a18;
-        color: var(--cream);
-        padding: 9px 12px;
-        font-family: "Courier Prime", monospace;
-        font-size: 0.82rem;
-        margin-bottom: 8px;
-        outline: none;
-        transition: border-color 0.2s;
-      }
-      .email-form input:focus {
-        border-color: var(--sepia);
-      }
-      .email-form input::placeholder {
-        color: #4a3020;
-      }
-
-      .section-divider {
+      hr.divider {
         border: none;
         border-top: 1px solid #2a1e12;
-        margin: 14px 0;
-      }
-
-      .success-msg {
-        background: rgba(139, 105, 20, 0.15);
-        border: 1px solid var(--sepia);
-        padding: 8px 14px;
-        font-size: 0.75rem;
-        color: var(--sepia-light);
-        text-align: center;
-        display: none;
-        margin-top: 8px;
-      }
-      .success-msg.show {
-        display: block;
-      }
-
-      .frame-swatches {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      .frame-swatch {
-        width: 44px;
-        height: 44px;
-        border: 2px solid #2a1e12;
-        cursor: pointer;
-        transition: all 0.2s;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        border-radius: 6px;
-      }
-      .frame-swatch:hover {
-        border-color: var(--sepia);
-      }
-      .frame-swatch.selected {
-        border-color: var(--warm);
-        box-shadow: 0 0 0 1px rgba(196, 98, 45, 0.5);
-      }
-
-      .cam-status {
-        font-size: 0.75rem;
-        color: var(--sepia);
-        font-style: italic;
-        text-align: center;
-        min-height: 20px;
-        margin-top: 6px;
-      }
-
-      .retake-strip {
-        display: flex;
-        gap: 4px;
-        margin-top: 8px;
-        flex-wrap: wrap;
-      }
-      .retake-single {
-        flex: 1;
-        min-width: 70px;
-        background: transparent;
-        border: 1px solid #3a2a18;
-        color: #6a5040;
-        font-size: 0.55rem;
-        font-family: "Special Elite", cursive;
-        letter-spacing: 0.1em;
-        padding: 5px 4px;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-transform: uppercase;
-      }
-      .retake-single:hover {
-        border-color: var(--sepia);
-        color: var(--sepia-light);
-      }
-      .retake-single:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-      }
-
-      .cam-error {
-        padding: 32px 20px;
-        text-align: center;
-        background: var(--panel);
-        border: 1px dashed #3a2a18;
-        display: none;
-        margin-bottom: 18px;
-      }
-      .cam-error.show {
-        display: block;
-      }
-      .cam-error .icon {
-        font-size: 2.4rem;
-        margin-bottom: 10px;
-      }
-      .cam-error p {
-        color: var(--sepia-light);
-        font-size: 0.9rem;
-        line-height: 1.6;
-      }
-      .cam-error small {
-        display: block;
-        margin-top: 6px;
-        font-size: 0.75rem;
-        color: #6c5438;
-      }
-
-      @media (max-width: 700px) {
-        header {
-          padding-top: 18px;
-        }
-        .steps-bar {
-          top: 74px;
-        }
-        .camera-area {
-          grid-template-columns: 1fr;
-        }
-        .cam-controls {
-          min-width: unset;
-        }
-        .strip-preview-area {
-          position: static;
-        }
+        margin: 12px 0;
       }
     </style>
   </head>
@@ -1050,155 +1300,372 @@
       <div class="tagline">Vintage Photo Booth Experience</div>
     </header>
 
-    <!-- Steps bar -->
     <div class="steps-bar">
-      <div class="step active" id="step1-indicator">
+      <div class="step active" id="step1-indicator" onclick="goToStep(1)">
         <div class="step-num">1</div>
-        Choose Layout
+        <span>Layout</span>
       </div>
       <div class="step-arrow">›</div>
-      <div class="step" id="step2-indicator">
+      <div
+        class="step"
+        id="step2-indicator"
+        onclick="state.layout && goToStep(2)"
+      >
         <div class="step-num">2</div>
-        Choose Filter
+        <span>Filter</span>
       </div>
       <div class="step-arrow">›</div>
       <div class="step" id="step3-indicator">
         <div class="step-num">3</div>
-        Take Photos
+        <span>Shoot</span>
       </div>
       <div class="step-arrow">›</div>
       <div class="step" id="step4-indicator">
         <div class="step-num">4</div>
-        Your Strip
+        <span>Strip</span>
       </div>
     </div>
 
-    <main class="app-container">
-      <!-- STEP 1: LAYOUT -->
-      <section
-        class="panel active"
-        id="panel-layout"
-        aria-label="Choose layout"
-      >
-        <div class="panel-title">Choose your <em>layout</em></div>
-        <div class="panel-subtitle">
-          — Select the strip format that fits your moment —
-        </div>
+    <!-- ░░ STEPS 1, 2, 4 live inside this scrollable area ░░ -->
+    <div class="app-scroll" id="main-scroll">
+      <div class="app-container">
+        <!-- STEP 1: LAYOUT -->
+        <section class="panel active" id="panel-layout">
+          <div class="panel-title">Choose your <em>layout</em></div>
+          <div class="panel-subtitle">— Double-tap a layout to select it —</div>
+          <div class="layout-carousel-section">
+            <button
+              class="carousel-arrow"
+              id="carousel-prev"
+              onclick="carouselMove(-1)"
+            >
+              &#8249;
+            </button>
+            <div class="carousel-track-outer" id="carousel-outer">
+              <div class="carousel-track" id="carousel-track"></div>
+            </div>
+            <button
+              class="carousel-arrow"
+              id="carousel-next"
+              onclick="carouselMove(1)"
+            >
+              &#8250;
+            </button>
+          </div>
+          <div class="carousel-dots" id="carousel-dots"></div>
+          <hr class="divider" style="margin: 18px 0 12px" />
+          <div class="ctrl-label" style="margin-bottom: 7px">
+            Strip Frame Accent
+          </div>
+          <div class="frame-swatches" id="frame-swatches"></div>
+          <div class="action-row">
+            <button class="btn btn-gold" onclick="goToStep(2)">
+              Next: Choose Filter &#8594;
+            </button>
+          </div>
+        </section>
 
-        <div id="layout-sections"></div>
+        <!-- STEP 2: FILTER -->
+        <section class="panel" id="panel-filter">
+          <div class="panel-title">Choose your <em>filter</em></div>
+          <div class="panel-subtitle">— Live preview on your camera —</div>
+          <div class="filter-stage">
+            <div class="filter-live-preview" id="filter-preview-box">
+              <video
+                id="filter-preview-video"
+                autoplay
+                playsinline
+                muted
+              ></video>
+              <div class="filter-cam-overlay"></div>
+              <div class="filter-live-label" id="filter-live-label">
+                &#9679; LIVE PREVIEW
+              </div>
+            </div>
+            <div class="filter-scroll-area">
+              <div class="filter-row" id="filter-row"></div>
+            </div>
+          </div>
+          <div class="action-row">
+            <button class="btn btn-ghost btn-sm" onclick="goToStep(1)">
+              &#8592; Back
+            </button>
+            <button class="btn btn-gold" onclick="goToStep(3)">
+              Next: Take Photos &#8594;
+            </button>
+          </div>
+        </section>
 
-        <hr
-          style="
-            border: none;
-            border-top: 1px solid #2a1e12;
-            margin: 26px 0 18px;
-          "
-        />
-        <div class="ctrl-label" style="margin-bottom: 10px">
-          Strip Frame Accent
-        </div>
-        <div class="frame-swatches" id="frame-swatches"></div>
-        <br /><br />
-        <button class="btn btn-gold btn-big" onclick="goToStep(2)">
-          Next: Choose Filter
-        </button>
-      </section>
+        <!-- STEP 4: RESULT -->
+        <section class="panel" id="panel-result">
+          <div class="panel-title">Customize your <em>strip</em></div>
+          <div class="panel-subtitle">
+            — Design, personalize, then download —
+          </div>
+          <div class="result-layout">
+            <div class="strip-preview-area">
+              <div class="strip-preview-wrap" id="strip-preview-wrap">
+                <canvas id="result-canvas"></canvas>
+                <div id="sticker-layer"></div>
+              </div>
+              <div class="action-row" style="justify-content: center">
+                <button class="btn btn-gold" onclick="downloadStrip()">
+                  &#8659; Download
+                </button>
+                <button class="btn btn-ghost btn-sm" onclick="goToStep(3)">
+                  Retake
+                </button>
+                <button
+                  class="btn btn-ghost btn-sm"
+                  onclick="startNewSession()"
+                >
+                  New
+                </button>
+              </div>
+            </div>
+            <aside class="customize-panel">
+              <div class="cp-section">
+                <div class="cp-title">Border Color <span>full strip</span></div>
+                <div class="border-swatches" id="border-swatches"></div>
+                <div class="custom-color-wrap">
+                  <input
+                    type="color"
+                    id="custom-border-color"
+                    value="#1a100a"
+                    oninput="setCustomBorderColor(this.value)"
+                  />
+                  <label>Custom</label>
+                </div>
+              </div>
+              <div class="cp-section">
+                <div class="cp-title">Label <span>bottom text</span></div>
+                <div class="toggle-row">
+                  <span class="toggle-label">Show Label</span
+                  ><label class="toggle"
+                    ><input
+                      type="checkbox"
+                      id="show-label"
+                      checked
+                      onchange="rerenderStrip()" />
+                    <div class="toggle-slider"></div
+                  ></label>
+                </div>
+                <input
+                  class="cp-input"
+                  type="text"
+                  id="strip-label"
+                  placeholder="The Darkroom · 2026"
+                  oninput="rerenderStrip()"
+                  value="The Darkroom · 2026"
+                />
+                <select
+                  class="font-select"
+                  id="label-font"
+                  onchange="rerenderStrip()"
+                >
+                  <option value="cursive">Playfair Display</option>
+                  <option value="'Special Elite', cursive">
+                    Special Elite
+                  </option>
+                  <option value="'Courier Prime', monospace">
+                    Courier Prime
+                  </option>
+                  <option value="serif">Classic Serif</option>
+                </select>
+              </div>
+              <div class="cp-section">
+                <div class="cp-title">Overlays</div>
+                <div class="toggle-row">
+                  <span class="toggle-label">Show Date</span
+                  ><label class="toggle"
+                    ><input
+                      type="checkbox"
+                      id="show-date"
+                      checked
+                      onchange="rerenderStrip()" />
+                    <div class="toggle-slider"></div
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <span class="toggle-label">Filter Name</span
+                  ><label class="toggle"
+                    ><input
+                      type="checkbox"
+                      id="show-filter-name"
+                      checked
+                      onchange="rerenderStrip()" />
+                    <div class="toggle-slider"></div
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <span class="toggle-label">Film Holes</span
+                  ><label class="toggle"
+                    ><input
+                      type="checkbox"
+                      id="show-film-holes"
+                      checked
+                      onchange="rerenderStrip()" />
+                    <div class="toggle-slider"></div
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <span class="toggle-label">Vignette</span
+                  ><label class="toggle"
+                    ><input
+                      type="checkbox"
+                      id="show-vignette"
+                      checked
+                      onchange="rerenderStrip()" />
+                    <div class="toggle-slider"></div
+                  ></label>
+                </div>
+              </div>
+              <div class="cp-section">
+                <div class="cp-title">Stickers <span>drag on strip</span></div>
+                <div class="sticker-tabs" id="sticker-tabs"></div>
+                <div class="sticker-grid" id="sticker-grid"></div>
+                <div style="margin-top: 7px; display: flex; gap: 5px">
+                  <button
+                    class="btn btn-ghost btn-sm"
+                    style="flex: 1"
+                    onclick="clearAllStickers()"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    class="btn btn-ghost btn-sm"
+                    style="flex: 1"
+                    onclick="burnStickers()"
+                  >
+                    Burn In
+                  </button>
+                </div>
+              </div>
+              <div class="cp-section">
+                <div class="cp-title">Send by Email</div>
+                <div class="email-form">
+                  <input
+                    type="email"
+                    id="email-input"
+                    placeholder="your@email.com"
+                  />
+                  <button
+                    class="btn btn-ghost btn-full btn-sm"
+                    onclick="sendEmail()"
+                  >
+                    Open Email App
+                  </button>
+                </div>
+                <div class="success-msg" id="email-success">
+                  Email app opened. Attach the downloaded strip and send.
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </div>
+      <!-- end app-container -->
+    </div>
+    <!-- end main-scroll -->
 
-      <!-- STEP 2: FILTER -->
-      <section class="panel" id="panel-filter" aria-label="Choose filter">
-        <div class="panel-title">Choose your <em>filter</em></div>
-        <div class="panel-subtitle">
-          — Each filter carries a different mood and era —
-        </div>
-        <div class="filter-grid" id="filter-grid"></div>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap">
-          <button class="btn btn-ghost" onclick="goToStep(1)">Back</button>
-          <button class="btn btn-gold btn-big" onclick="goToStep(3)">
-            Next: Take Photos
-          </button>
-        </div>
-      </section>
-
-      <!-- STEP 3: CAMERA -->
-      <section class="panel" id="panel-camera" aria-label="Take photos">
+    <!--
+  STEP 3: CAMERA
+  ─────────────────────────────────────────────────────
+  FIX: This element is display:none by default (via CSS).
+  On mobile it becomes position:fixed when .active is added.
+  On desktop it becomes a flex child filling remaining height.
+  It never participates in the body flex layout when hidden.
+  ─────────────────────────────────────────────────────
+-->
+    <section id="panel-camera">
+      <!-- Desktop title (inside the desktop wrapper) -->
+      <div class="cam-desktop-wrap">
         <div class="panel-title">Ready for your <em>close-up</em></div>
         <div class="panel-subtitle" id="camera-subtitle">
-          — Click the shutter to take your photos —
+          — Press shutter to capture —
         </div>
-
-        <div class="cam-error" id="cam-error">
+        <div class="cam-error" id="cam-error-d">
           <div class="icon">📷</div>
           <p>
-            Camera access could not be started.<br />Please allow camera
-            permissions in your browser and refresh this page.
+            Camera access could not be started.<br />Allow permissions and
+            refresh.
           </p>
-          <small>
-            Note: Most browsers only allow camera on secure origins (https:// or
-            localhost). Opening this file directly from your computer (file://)
-            may block camera access.
-          </small>
         </div>
 
-        <div class="camera-area" id="camera-area">
-          <div>
-            <div class="camera-wrap" id="camera-wrap">
-              <video id="video-feed" autoplay playsinline muted></video>
+        <div class="cam-body" id="camera-area-desktop">
+          <div class="camera-col-inner">
+            <div
+              class="camera-wrap"
+              style="
+                position: relative;
+                background: #000;
+                overflow: hidden;
+                border: 3px solid #2a1e12;
+              "
+            >
+              <video
+                id="video-feed"
+                autoplay
+                playsinline
+                muted
+                style="width: 100%; display: block; background: #000"
+              ></video>
               <canvas id="camera-canvas"></canvas>
               <div class="camera-overlay"></div>
               <div class="countdown-display" id="countdown-display"></div>
               <div class="flash-overlay" id="flash-overlay"></div>
             </div>
             <div class="shot-tracker" id="shot-tracker"></div>
-            <div class="retake-strip" id="retake-strip"></div>
-            <div class="cam-status" id="cam-status">Ready to shoot.</div>
+            <div
+              class="retake-strip cam-ctrl-desktop-only"
+              id="retake-strip"
+            ></div>
+            <div class="cam-status" id="cam-status-d">Ready to shoot.</div>
           </div>
-          <aside class="cam-controls">
+          <aside class="cam-sidebar-desktop">
             <div>
-              <div class="ctrl-label">Filter Preview</div>
+              <div class="ctrl-label">Filter</div>
               <div
                 id="filter-badge"
                 style="
                   font-family: &quot;Special Elite&quot;, cursive;
-                  font-size: 0.7rem;
-                  letter-spacing: 0.2em;
+                  font-size: 0.62rem;
+                  letter-spacing: 0.14em;
                   color: var(--sepia-light);
-                  padding: 6px 10px;
+                  padding: 4px 8px;
                   border: 1px solid #3a2a18;
                   background: var(--panel);
-                  margin-bottom: 16px;
+                  border-radius: 3px;
+                  white-space: nowrap;
                 "
               ></div>
             </div>
             <div>
-              <div class="ctrl-label">Timer Delay</div>
-              <div style="display: flex; gap: 6px; flex-wrap: wrap">
+              <div class="ctrl-label">Timer</div>
+              <div class="timer-btns">
                 <button
-                  class="btn btn-ghost"
-                  style="padding: 7px 12px; font-size: 0.65rem"
+                  class="btn btn-ghost btn-sm"
                   onclick="setTimer(0)"
                   id="timer-0"
                 >
-                  None
+                  Off
                 </button>
                 <button
-                  class="btn btn-ghost"
-                  style="padding: 7px 12px; font-size: 0.65rem"
+                  class="btn btn-ghost btn-sm"
                   onclick="setTimer(3)"
                   id="timer-3"
                 >
                   3s
                 </button>
                 <button
-                  class="btn btn-ghost"
-                  style="padding: 7px 12px; font-size: 0.65rem"
+                  class="btn btn-ghost btn-sm"
                   onclick="setTimer(5)"
                   id="timer-5"
                 >
                   5s
                 </button>
                 <button
-                  class="btn btn-ghost"
-                  style="padding: 7px 12px; font-size: 0.65rem"
+                  class="btn btn-ghost btn-sm"
                   onclick="setTimer(10)"
                   id="timer-10"
                 >
@@ -1209,257 +1676,117 @@
             <div>
               <div class="ctrl-label">Mirror</div>
               <button
-                class="btn btn-ghost btn-full"
+                class="btn btn-ghost btn-full btn-sm"
                 id="mirror-btn"
                 onclick="toggleMirror()"
-                style="padding: 8px"
               >
-                ↔ Mirror On
+                &#8596; On
               </button>
             </div>
-            <br />
-            <button
-              class="shutter-btn"
-              id="shutter-btn"
-              onclick="startCapture()"
-              title="Take Photo"
-            >
-              📸
-            </button>
-            <div
-              style="
-                text-align: center;
-                font-size: 0.65rem;
-                color: #4a3020;
-                font-family: &quot;Special Elite&quot;, cursive;
-                letter-spacing: 0.15em;
-                margin-top: 4px;
-              "
-            >
-              SHUTTER
+            <div class="shutter-wrap">
+              <button
+                class="shutter-btn"
+                id="shutter-btn"
+                onclick="startCapture()"
+                title="Take Photo (Space)"
+              >
+                📸
+              </button>
+              <span class="shutter-label">Shutter</span>
             </div>
-            <hr class="section-divider" />
-            <button class="btn btn-danger btn-full" onclick="resetCamera()">
-              Start Over
+            <hr class="divider" />
+            <button
+              class="btn btn-danger btn-full btn-sm"
+              onclick="resetCamera()"
+            >
+              &#8635; Reset
             </button>
-            <button class="btn btn-ghost btn-full" onclick="goToStep(2)">
+            <button class="btn btn-ghost btn-full btn-sm" onclick="goToStep(2)">
               Change Filter
             </button>
           </aside>
         </div>
-      </section>
+      </div>
 
-      <!-- STEP 4: CUSTOMIZE & RESULT -->
-      <section
-        class="panel"
-        id="panel-result"
-        aria-label="Customize and download"
+      <!-- Mobile camera body -->
+      <div
+        class="cam-error"
+        id="cam-error"
+        style="display: none; margin: 8px"
+      ></div>
+      <div
+        class="cam-body"
+        id="camera-area"
+        style="flex: 1; min-height: 0; display: flex; flex-direction: column"
       >
-        <div class="panel-title" style="margin-bottom: 4px">
-          Customize your <em>strip</em>
-        </div>
-        <div class="panel-subtitle">
-          — Design it, personalize it, then download —
-        </div>
-
-        <div class="customize-layout">
-          <div class="strip-preview-area">
-            <div class="strip-preview-wrap" id="strip-preview-wrap">
-              <canvas id="result-canvas"></canvas>
-              <div id="sticker-layer"></div>
-            </div>
-            <div
-              style="
-                display: flex;
-                gap: 10px;
-                flex-wrap: wrap;
-                justify-content: center;
-              "
-            >
-              <button class="btn btn-gold btn-big" onclick="downloadStrip()">
-                Download Strip
-              </button>
-              <button class="btn btn-ghost" onclick="goToStep(3)">
-                Retake
-              </button>
-              <button class="btn btn-ghost" onclick="startNewSession()">
-                New Session
-              </button>
-            </div>
+        <div
+          class="camera-wrap"
+          style="
+            flex: 1;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+          "
+        >
+          <video id="video-feed-mobile" autoplay playsinline muted></video>
+          <div class="camera-overlay"></div>
+          <div class="countdown-display" id="countdown-display-mobile"></div>
+          <div class="flash-overlay" id="flash-overlay-mobile"></div>
+          <div class="cam-video-footer">
+            <div class="shot-tracker" id="shot-tracker-mobile"></div>
+            <div class="cam-status" id="cam-status">Ready to shoot.</div>
           </div>
-
-          <aside class="customize-panel">
-            <div class="cp-section">
-              <div class="cp-title">
-                Border Color <span>applies to full strip</span>
-              </div>
-              <div class="border-swatches" id="border-swatches"></div>
-              <div class="custom-color-wrap">
-                <input
-                  type="color"
-                  id="custom-border-color"
-                  value="#1a100a"
-                  oninput="setCustomBorderColor(this.value)"
-                />
-                <label>Custom Color</label>
-              </div>
-            </div>
-
-            <div class="cp-section">
-              <div class="cp-title">
-                Strip Label <span>shown at bottom</span>
-              </div>
-              <div class="toggle-row">
-                <span class="toggle-label">Show Label</span>
-                <label class="toggle">
-                  <input
-                    type="checkbox"
-                    id="show-label"
-                    checked
-                    onchange="rerenderStrip()"
-                  />
-                  <div class="toggle-slider"></div>
-                </label>
-              </div>
-              <input
-                class="cp-input"
-                type="text"
-                id="strip-label"
-                placeholder="The Darkroom · 2026"
-                oninput="rerenderStrip()"
-                value="The Darkroom · 2026"
-              />
-              <select
-                class="font-select"
-                id="label-font"
-                onchange="rerenderStrip()"
-              >
-                <option value="cursive">Playfair Display (Serif Italic)</option>
-                <option value="'Special Elite', cursive">
-                  Special Elite (Typewriter)
-                </option>
-                <option value="'Courier Prime', monospace">
-                  Courier Prime (Monospace)
-                </option>
-                <option value="serif">Classic Serif</option>
-              </select>
-            </div>
-
-            <div class="cp-section">
-              <div class="cp-title">Overlay Options</div>
-              <div class="toggle-row">
-                <span class="toggle-label">Show Date</span>
-                <label class="toggle">
-                  <input
-                    type="checkbox"
-                    id="show-date"
-                    checked
-                    onchange="rerenderStrip()"
-                  />
-                  <div class="toggle-slider"></div>
-                </label>
-              </div>
-              <div class="toggle-row">
-                <span class="toggle-label">Show Filter Name</span>
-                <label class="toggle">
-                  <input
-                    type="checkbox"
-                    id="show-filter-name"
-                    checked
-                    onchange="rerenderStrip()"
-                  />
-                  <div class="toggle-slider"></div>
-                </label>
-              </div>
-              <div class="toggle-row">
-                <span class="toggle-label">Film Holes</span>
-                <label class="toggle">
-                  <input
-                    type="checkbox"
-                    id="show-film-holes"
-                    checked
-                    onchange="rerenderStrip()"
-                  />
-                  <div class="toggle-slider"></div>
-                </label>
-              </div>
-              <div class="toggle-row">
-                <span class="toggle-label">Vignette on Photos</span>
-                <label class="toggle">
-                  <input
-                    type="checkbox"
-                    id="show-vignette"
-                    checked
-                    onchange="rerenderStrip()"
-                  />
-                  <div class="toggle-slider"></div>
-                </label>
-              </div>
-            </div>
-
-            <div class="cp-section">
-              <div class="cp-title">
-                Stickers <span>click, then drag on strip</span>
-              </div>
-              <div class="sticker-tabs" id="sticker-tabs"></div>
-              <div class="sticker-grid" id="sticker-grid"></div>
-              <div style="margin-top: 8px; display: flex; gap: 8px">
-                <button
-                  class="btn btn-ghost"
-                  style="flex: 1; padding: 7px; font-size: 0.6rem"
-                  onclick="clearAllStickers()"
-                >
-                  Clear All
-                </button>
-                <button
-                  class="btn btn-ghost"
-                  style="flex: 1; padding: 7px; font-size: 0.6rem"
-                  onclick="burnStickers()"
-                >
-                  Burn In
-                </button>
-              </div>
-              <div
-                style="
-                  font-size: 0.62rem;
-                  color: #4a3020;
-                  margin-top: 6px;
-                  font-style: italic;
-                "
-              >
-                Drag stickers to reposition. Use Burn In to embed them into the
-                image before download.
-              </div>
-            </div>
-
-            <div class="cp-section">
-              <div class="cp-title">Send by Email</div>
-              <div class="email-form">
-                <input
-                  type="email"
-                  id="email-input"
-                  placeholder="your@email.com"
-                />
-                <button
-                  class="btn btn-ghost btn-full"
-                  style="font-size: 0.72rem"
-                  onclick="sendEmail()"
-                >
-                  Open Email App
-                </button>
-              </div>
-              <div class="success-msg" id="email-success">
-                Email app opened. Please attach the downloaded strip image and
-                send.
-              </div>
-            </div>
-          </aside>
         </div>
-      </section>
-    </main>
+      </div>
+      <div class="cam-controls-bar">
+        <div class="cam-ctrl-group">
+          <div class="ctrl-label">Timer</div>
+          <div class="timer-btns">
+            <button
+              class="btn btn-ghost btn-sm"
+              onclick="setTimer(0)"
+              id="timer-0m"
+            >
+              Off
+            </button>
+            <button
+              class="btn btn-ghost btn-sm"
+              onclick="setTimer(3)"
+              id="timer-3m"
+            >
+              3s
+            </button>
+            <button
+              class="btn btn-ghost btn-sm"
+              onclick="setTimer(5)"
+              id="timer-5m"
+            >
+              5s
+            </button>
+            <button
+              class="btn btn-ghost btn-sm"
+              onclick="setTimer(10)"
+              id="timer-10m"
+            >
+              10s
+            </button>
+          </div>
+        </div>
+        <div class="shutter-wrap" style="margin-left: auto">
+          <button
+            class="shutter-btn"
+            id="shutter-btn-mobile"
+            onclick="startCapture()"
+            title="Take Photo"
+          >
+            📸
+          </button>
+          <span class="shutter-label">Shoot</span>
+        </div>
+      </div>
+    </section>
 
     <script>
-      // ===== STATE =====
       const state = {
         currentStep: 1,
         layout: null,
@@ -1469,266 +1796,310 @@
         mirror: true,
         capturedPhotos: [],
         stream: null,
+        filterStream: null,
         shooting: false,
       };
+      const isMobileView = () => window.innerWidth <= 640;
 
-      // ===== LAYOUTS =====
       const LAYOUTS = [
         {
           id: "strip2",
-          group: "6×2 Classic Strip",
+          group: "Classic Strip",
           name: "2 Poses",
-          badge: "2 Pose",
+          badge: "2 Shot",
           shots: 2,
           cols: 1,
           rows: 2,
-          sW: 120,
-          sH: 280,
+          sW: 100,
+          sH: 230,
           pW: 100,
           pH: 90,
         },
         {
           id: "strip3",
-          group: "6×2 Classic Strip",
+          group: "Classic Strip",
           name: "3 Poses",
-          badge: "3 Pose",
+          badge: "3 Shot",
           shots: 3,
           cols: 1,
           rows: 3,
-          sW: 120,
-          sH: 320,
+          sW: 100,
+          sH: 290,
           pW: 100,
           pH: 78,
         },
         {
           id: "strip4",
-          group: "6×2 Classic Strip",
+          group: "Classic Strip",
           name: "4 Poses",
-          badge: "4 Pose",
+          badge: "4 Shot",
           shots: 4,
           cols: 1,
           rows: 4,
-          sW: 120,
-          sH: 360,
+          sW: 100,
+          sH: 340,
           pW: 100,
           pH: 68,
         },
         {
           id: "wide2x2",
-          group: "6×4 Wide Strip",
+          group: "Wide Strip",
           name: "2×2 Grid",
-          badge: "4 Pose",
+          badge: "4 Shot",
           shots: 4,
           cols: 2,
           rows: 2,
-          sW: 220,
-          sH: 240,
+          sW: 190,
+          sH: 210,
           pW: 96,
           pH: 86,
         },
         {
           id: "wide3x2",
-          group: "6×4 Wide Strip",
+          group: "Wide Strip",
           name: "3×2 Grid",
-          badge: "6 Pose",
+          badge: "6 Shot",
           shots: 6,
           cols: 2,
           rows: 3,
-          sW: 220,
-          sH: 300,
+          sW: 190,
+          sH: 270,
           pW: 96,
           pH: 72,
         },
         {
           id: "wide1x2",
-          group: "6×4 Wide Strip",
+          group: "Wide Strip",
           name: "Side by Side",
-          badge: "2 Pose",
+          badge: "2 Shot",
           shots: 2,
           cols: 2,
           rows: 1,
-          sW: 220,
-          sH: 180,
+          sW: 190,
+          sH: 160,
           pW: 96,
           pH: 120,
         },
         {
           id: "post1",
-          group: "8×5 Postcard",
+          group: "Postcard",
           name: "Single",
-          badge: "1 Pose",
+          badge: "1 Shot",
           shots: 1,
           cols: 1,
           rows: 1,
-          sW: 240,
-          sH: 190,
+          sW: 210,
+          sH: 165,
           pW: 200,
           pH: 148,
         },
         {
           id: "post3",
-          group: "8×5 Postcard",
+          group: "Postcard",
           name: "Triple Row",
-          badge: "3 Pose",
+          badge: "3 Shot",
           shots: 3,
           cols: 3,
           rows: 1,
-          sW: 240,
-          sH: 190,
-          pW: 64,
+          sW: 210,
+          sH: 165,
+          pW: 62,
           pH: 148,
         },
         {
           id: "post2x2",
-          group: "8×5 Postcard",
+          group: "Postcard",
           name: "2×2 Square",
-          badge: "4 Pose",
+          badge: "4 Shot",
           shots: 4,
           cols: 2,
           rows: 2,
+          sW: 210,
+          sH: 165,
+          pW: 95,
+          pH: 66,
+        },
+        {
+          id: "banner",
+          group: "Panorama",
+          name: "Wide Single",
+          badge: "1 Shot",
+          shots: 1,
+          cols: 1,
+          rows: 1,
           sW: 240,
-          sH: 190,
-          pW: 100,
-          pH: 68,
+          sH: 130,
+          pW: 220,
+          pH: 100,
+        },
+        {
+          id: "banner3",
+          group: "Panorama",
+          name: "3 Wide",
+          badge: "3 Shot",
+          shots: 3,
+          cols: 3,
+          rows: 1,
+          sW: 240,
+          sH: 130,
+          pW: 68,
+          pH: 100,
         },
       ];
 
-      const LAYOUT_GROUPS = [...new Set(LAYOUTS.map((l) => l.group))];
-
-      // ===== FILTERS =====
       const FILTERS = [
-        {
-          id: "none",
-          label: "Original",
-          icon: "🌿",
-          css: "none",
-          canvas: null,
-        },
+        { id: "none", label: "Original", icon: "🌿", css: "none" },
         {
           id: "sepia",
           label: "Sepia",
           icon: "🍂",
           css: "sepia(1) contrast(1.1)",
-          canvas: "sepia",
         },
         {
           id: "bw",
           label: "B&W",
           icon: "🖤",
           css: "grayscale(1) contrast(1.15)",
-          canvas: "bw",
         },
         {
           id: "fade",
           label: "Fade",
           icon: "🌫",
-          css: "sepia(0.5) brightness(1.15) saturate(0.7) contrast(0.85)",
-          canvas: "fade",
+          css: "sepia(.5) brightness(1.15) saturate(.7) contrast(.85)",
         },
         {
           id: "warm",
           label: "Warm",
           icon: "☀️",
-          css: "sepia(0.3) saturate(1.4) brightness(1.05) hue-rotate(-10deg)",
-          canvas: "warm",
+          css: "sepia(.3) saturate(1.4) brightness(1.05) hue-rotate(-10deg)",
         },
         {
           id: "cool",
           label: "Cool",
           icon: "❄️",
-          css: "saturate(0.8) hue-rotate(20deg) brightness(1.05)",
-          canvas: "cool",
+          css: "saturate(.8) hue-rotate(20deg) brightness(1.05)",
         },
         {
           id: "vivid",
           label: "Vivid",
           icon: "🌈",
           css: "saturate(1.8) contrast(1.15) brightness(1.05)",
-          canvas: "vivid",
         },
         {
           id: "noir",
           label: "Noir",
           icon: "🌃",
-          css: "grayscale(1) contrast(1.4) brightness(0.85)",
-          canvas: "noir",
+          css: "grayscale(1) contrast(1.4) brightness(.85)",
         },
         {
           id: "amber",
           label: "Amber",
           icon: "🕯",
-          css: "sepia(0.7) saturate(1.2) brightness(1.1) hue-rotate(-15deg)",
-          canvas: "amber",
+          css: "sepia(.7) saturate(1.2) brightness(1.1) hue-rotate(-15deg)",
         },
         {
           id: "rosy",
           label: "Rosy",
           icon: "🌸",
           css: "saturate(1.3) hue-rotate(-30deg) brightness(1.05)",
-          canvas: "rosy",
+        },
+        {
+          id: "teal",
+          label: "Teal",
+          icon: "🌊",
+          css: "saturate(1.2) hue-rotate(160deg) brightness(1.05) contrast(1.1)",
+        },
+        {
+          id: "golden",
+          label: "Golden Era",
+          icon: "✨",
+          css: "sepia(.4) saturate(1.5) brightness(1.1) contrast(1.05) hue-rotate(-20deg)",
+        },
+        {
+          id: "matte",
+          label: "Matte",
+          icon: "🎞",
+          css: "contrast(.85) saturate(.9) brightness(1.05)",
+        },
+        {
+          id: "lomo",
+          label: "Lomo",
+          icon: "🎪",
+          css: "saturate(1.6) contrast(1.3) brightness(.95) hue-rotate(5deg)",
+        },
+        {
+          id: "dreamy",
+          label: "Dreamy",
+          icon: "💭",
+          css: "saturate(.8) brightness(1.2) contrast(.9)",
+        },
+        {
+          id: "punch",
+          label: "Punch",
+          icon: "⚡",
+          css: "saturate(2) contrast(1.25)",
+        },
+        {
+          id: "vintage",
+          label: "Vintage",
+          icon: "📷",
+          css: "sepia(.6) saturate(1.1) contrast(1.05) brightness(1.05) hue-rotate(-5deg)",
+        },
+        {
+          id: "cinematic",
+          label: "Cinematic",
+          icon: "🎬",
+          css: "contrast(1.2) saturate(.85) brightness(.95) hue-rotate(5deg)",
+        },
+        {
+          id: "pastel",
+          label: "Pastel",
+          icon: "🍬",
+          css: "saturate(.7) brightness(1.18) contrast(.88)",
+        },
+        {
+          id: "chrome",
+          label: "Chrome",
+          icon: "🪩",
+          css: "saturate(1.3) contrast(1.2) brightness(1.05) hue-rotate(10deg)",
         },
       ];
 
-      // ===== BORDER COLORS =====
       const BORDER_COLORS = [
-        { id: "dark-film", hex: "#1a100a", label: "Dark Film" },
-        { id: "jet", hex: "#050302", label: "Jet Black" },
-        { id: "white", hex: "#f5f0e8", label: "Warm White" },
-        { id: "ivory", hex: "#fffdf0", label: "Ivory" },
-        { id: "cream", hex: "#f0e8d0", label: "Cream" },
-        { id: "sepia-dk", hex: "#3d2408", label: "Dark Sepia" },
-        { id: "walnut", hex: "#5c3317", label: "Walnut" },
-        { id: "caramel", hex: "#c68642", label: "Caramel" },
-        { id: "sand", hex: "#d2b48c", label: "Sand" },
-        { id: "tan", hex: "#d2996a", label: "Tan" },
-        { id: "crimson", hex: "#8b0000", label: "Crimson" },
-        { id: "red", hex: "#cc2222", label: "Red" },
-        { id: "coral", hex: "#e05050", label: "Coral" },
-        { id: "rose", hex: "#c8506a", label: "Rose" },
-        { id: "blush", hex: "#f4a0b0", label: "Blush" },
-        { id: "pink", hex: "#e891b8", label: "Pink" },
-        { id: "hot-pink", hex: "#cc0066", label: "Hot Pink" },
-        { id: "magenta", hex: "#990066", label: "Magenta" },
-        { id: "mauve", hex: "#8b5e6e", label: "Mauve" },
-        { id: "dusty-rose", hex: "#c4808a", label: "Dusty Rose" },
-        { id: "lavender", hex: "#cca0e0", label: "Lavender" },
-        { id: "violet", hex: "#9060b8", label: "Violet" },
-        { id: "purple", hex: "#6a0080", label: "Purple" },
-        { id: "indigo", hex: "#4b0082", label: "Indigo" },
-        { id: "plum", hex: "#5c2a5c", label: "Plum" },
-        { id: "lilac", hex: "#b090cc", label: "Lilac" },
-        { id: "navy", hex: "#0a1a4a", label: "Navy" },
-        { id: "royal-blue", hex: "#2040aa", label: "Royal Blue" },
-        { id: "blue", hex: "#2255cc", label: "Blue" },
-        { id: "sky", hex: "#5090d0", label: "Sky Blue" },
-        { id: "baby-blue", hex: "#a0c8e8", label: "Baby Blue" },
-        { id: "teal", hex: "#006080", label: "Teal" },
-        { id: "cerulean", hex: "#0080a0", label: "Cerulean" },
-        { id: "powder", hex: "#b8d8ec", label: "Powder Blue" },
-        { id: "forest", hex: "#1a4020", label: "Forest" },
-        { id: "hunter", hex: "#2a5030", label: "Hunter Green" },
-        { id: "olive", hex: "#5a6020", label: "Olive" },
-        { id: "sage", hex: "#8aaa78", label: "Sage" },
-        { id: "mint", hex: "#a0d8b8", label: "Mint" },
-        { id: "emerald", hex: "#106030", label: "Emerald" },
-        { id: "lime", hex: "#88cc44", label: "Lime" },
-        { id: "gold", hex: "#c8a020", label: "Gold" },
-        { id: "yellow", hex: "#e8d040", label: "Yellow" },
-        { id: "amber", hex: "#c87820", label: "Amber" },
-        { id: "orange", hex: "#cc5500", label: "Orange" },
-        { id: "burnt", hex: "#a03020", label: "Burnt Orange" },
-        { id: "mustard", hex: "#c89020", label: "Mustard" },
-        { id: "silver", hex: "#c0c0c0", label: "Silver" },
-        { id: "gold-met", hex: "#d4a050", label: "Metallic Gold" },
-        { id: "rose-gold", hex: "#b87a68", label: "Rose Gold" },
-        { id: "bronze", hex: "#8a5c2a", label: "Bronze" },
-        { id: "charcoal", hex: "#2a2a2a", label: "Charcoal" },
-        { id: "slate", hex: "#4a5060", label: "Slate" },
-        { id: "grey", hex: "#888888", label: "Grey" },
-        { id: "light-grey", hex: "#cccccc", label: "Light Grey" },
+        { hex: "#1a100a" },
+        { hex: "#050302" },
+        { hex: "#f5f0e8" },
+        { hex: "#fffdf0" },
+        { hex: "#f0e8d0" },
+        { hex: "#3d2408" },
+        { hex: "#5c3317" },
+        { hex: "#c68642" },
+        { hex: "#cc2222" },
+        { hex: "#c8506a" },
+        { hex: "#f4a0b0" },
+        { hex: "#e891b8" },
+        { hex: "#cc0066" },
+        { hex: "#990066" },
+        { hex: "#cca0e0" },
+        { hex: "#9060b8" },
+        { hex: "#6a0080" },
+        { hex: "#4b0082" },
+        { hex: "#0a1a4a" },
+        { hex: "#2040aa" },
+        { hex: "#5090d0" },
+        { hex: "#a0c8e8" },
+        { hex: "#006080" },
+        { hex: "#1a4020" },
+        { hex: "#8aaa78" },
+        { hex: "#a0d8b8" },
+        { hex: "#c8a020" },
+        { hex: "#e8d040" },
+        { hex: "#cc5500" },
+        { hex: "#c0c0c0" },
+        { hex: "#d4a050" },
+        { hex: "#888888" },
       ];
 
-      // ===== STICKERS =====
       const STICKER_CATS = {
         Hearts: [
           "❤️",
@@ -1840,7 +2211,6 @@
         ],
       };
 
-      // ===== CUSTOMIZE STATE =====
       const customizeState = {
         borderColor: "#1a100a",
         textColor: "#d4b896",
@@ -1854,260 +2224,684 @@
         stickers: [],
         activeStickerCat: "Hearts",
       };
-
-      // Frames
       const FRAMES = [
-        {
-          id: "classic",
-          label: "🎞",
-          desc: "Classic Film",
-          color: "#1a100a",
-          textColor: "#d4b896",
-        },
-        {
-          id: "white",
-          label: "🤍",
-          desc: "White Border",
-          color: "#f5f0e8",
-          textColor: "#5a3a1a",
-        },
-        {
-          id: "black",
-          label: "🖤",
-          desc: "Jet Black",
-          color: "#050302",
-          textColor: "#888",
-        },
-        {
-          id: "gold",
-          label: "✨",
-          desc: "Gold Foil",
-          color: "#3d2a08",
-          textColor: "#d4a84b",
-        },
-        {
-          id: "pink",
-          label: "🌸",
-          desc: "Blush Pink",
-          color: "#3a1a25",
-          textColor: "#e8b4c8",
-        },
+        { id: "classic", label: "🎞", color: "#1a100a", textColor: "#d4b896" },
+        { id: "white", label: "🤍", color: "#f5f0e8", textColor: "#5a3a1a" },
+        { id: "black", label: "🖤", color: "#050302", textColor: "#888" },
+        { id: "gold", label: "✨", color: "#3d2a08", textColor: "#d4a84b" },
+        { id: "pink", label: "🌸", color: "#3a1a25", textColor: "#e8b4c8" },
       ];
 
-      // ===== INIT =====
       function init() {
-        renderLayoutGrid();
+        renderCarousel();
         renderFilterGrid();
         renderFrameSwatches();
         renderBorderSwatches();
         renderStickerPanel();
-        selectLayout(LAYOUTS.find((l) => l.id === "strip3"));
         selectFilter(FILTERS[1]);
         selectFrame(FRAMES[0]);
         setTimer(3);
         setTimerHighlight();
       }
 
+      // ── CAROUSEL ──────────────────────────────────────────
+      let carouselIndex = 0;
+      function getVisibleCount() {
+        const w = window.innerWidth;
+        if (w < 480) return 1.7;
+        if (w < 680) return 2.6;
+        if (w < 900) return 3.5;
+        return 4.3;
+      }
+
+      function renderCarousel() {
+        const track = document.getElementById("carousel-track");
+        if (!track) return;
+        track.innerHTML = "";
+        LAYOUTS.forEach((l, i) => {
+          const slide = document.createElement("div");
+          slide.className = "layout-slide";
+          slide.id = "slide-" + i;
+          const card = document.createElement("div");
+          card.className = "layout-card";
+          card.id = "layout-" + l.id;
+          let tapCount = 0,
+            tapTimer = null;
+          card.addEventListener("click", () => {
+            tapCount++;
+            if (tapCount === 1) {
+              tapTimer = setTimeout(() => {
+                tapCount = 0;
+                carouselScrollTo(i);
+              }, 280);
+            } else {
+              clearTimeout(tapTimer);
+              tapCount = 0;
+              carouselGoTo(i);
+            }
+          });
+          const cvs = document.createElement("canvas");
+          cvs.width = l.sW;
+          cvs.height = l.sH;
+          cvs.style.cssText = "display:block;width:100%;height:auto;";
+          drawLayoutPreview(cvs, l, 1);
+          const check = document.createElement("div");
+          check.className = "lc-check";
+          check.textContent = "✓";
+          card.appendChild(check);
+          card.appendChild(cvs);
+          slide.appendChild(card);
+          const info = document.createElement("div");
+          info.className = "slide-info";
+          info.innerHTML = `<span class="lc-name">${l.name}</span><span class="lc-size">${l.group}<br>${l.shots} Photo${l.shots > 1 ? "s" : ""} · ${l.badge}</span>`;
+          slide.appendChild(info);
+          track.appendChild(slide);
+        });
+        const dots = document.getElementById("carousel-dots");
+        dots.innerHTML = LAYOUTS.map(
+          (_, i) =>
+            `<div class="carousel-dot" onclick="carouselGoTo(${i})"></div>`,
+        ).join("");
+        const outer = document.getElementById("carousel-outer");
+        let tx = 0,
+          ty = 0;
+        outer.addEventListener(
+          "touchstart",
+          (e) => {
+            tx = e.touches[0].clientX;
+            ty = e.touches[0].clientY;
+          },
+          { passive: true },
+        );
+        outer.addEventListener(
+          "touchend",
+          (e) => {
+            const dx = e.changedTouches[0].clientX - tx,
+              dy = e.changedTouches[0].clientY - ty;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30)
+              carouselMove(dx < 0 ? 1 : -1);
+          },
+          { passive: true },
+        );
+        document.addEventListener("keydown", (e) => {
+          if (state.currentStep !== 1) return;
+          if (e.key === "ArrowLeft") carouselMove(-1);
+          if (e.key === "ArrowRight") carouselMove(1);
+        });
+        window.addEventListener("resize", () => {
+          setSlideSizes();
+          carouselGoTo(carouselIndex, false);
+        });
+        setSlideSizes();
+        carouselGoTo(2, false);
+      }
+      function setSlideSizes() {
+        const outer = document.getElementById("carousel-outer");
+        if (!outer) return;
+        const sw = outer.offsetWidth / getVisibleCount();
+        document.querySelectorAll(".layout-slide").forEach((s) => {
+          s.style.width = sw + "px";
+          s.style.minWidth = sw + "px";
+        });
+      }
+      function carouselScrollTo(i) {
+        const track = document.getElementById("carousel-track"),
+          outer = document.getElementById("carousel-outer");
+        if (!track || !outer) return;
+        const sw = outer.offsetWidth / getVisibleCount();
+        const offset = Math.min(
+          0,
+          Math.max(
+            -((LAYOUTS.length - getVisibleCount()) * sw),
+            -(i - (getVisibleCount() / 2 - 0.5)) * sw,
+          ),
+        );
+        track.style.transition = "transform .42s cubic-bezier(.4,0,.2,1)";
+        track.style.transform = `translateX(${offset}px)`;
+        const prev = document.getElementById("carousel-prev"),
+          next = document.getElementById("carousel-next");
+        if (prev) prev.disabled = i === 0;
+        if (next) next.disabled = i === LAYOUTS.length - 1;
+      }
+      function carouselMove(dir) {
+        const n = carouselIndex + dir;
+        if (n < 0 || n >= LAYOUTS.length) return;
+        carouselGoTo(n);
+      }
+      function carouselGoTo(i, animate = true) {
+        carouselIndex = i;
+        const track = document.getElementById("carousel-track"),
+          outer = document.getElementById("carousel-outer");
+        if (!track || !outer) return;
+        const vis = getVisibleCount(),
+          sw = outer.offsetWidth / vis;
+        const offset = Math.min(
+          0,
+          Math.max(-((LAYOUTS.length - vis) * sw), -(i - (vis / 2 - 0.5)) * sw),
+        );
+        track.style.transition = animate
+          ? "transform .42s cubic-bezier(.4,0,.2,1)"
+          : "none";
+        track.style.transform = `translateX(${offset}px)`;
+        document
+          .querySelectorAll(".layout-card")
+          .forEach((c, idx) => c.classList.toggle("active-slide", idx === i));
+        document
+          .querySelectorAll(".layout-slide")
+          .forEach((s, idx) => s.classList.toggle("is-active", idx === i));
+        document
+          .querySelectorAll(".carousel-dot")
+          .forEach((d, idx) => d.classList.toggle("active", idx === i));
+        const prev = document.getElementById("carousel-prev"),
+          next = document.getElementById("carousel-next");
+        if (prev) prev.disabled = i === 0;
+        if (next) next.disabled = i === LAYOUTS.length - 1;
+        const ac = document.getElementById("layout-" + LAYOUTS[i].id);
+        if (ac) {
+          ac.classList.remove("just-selected");
+          void ac.offsetWidth;
+          ac.classList.add("just-selected");
+          setTimeout(() => ac.classList.remove("just-selected"), 550);
+        }
+        state.layout = LAYOUTS[i];
+      }
+
+      function drawLayoutPreview(cvs, l, scale) {
+        const ctx = cvs.getContext("2d"),
+          W = cvs.width,
+          H = cvs.height;
+        const PAD = 5,
+          GAP = 3,
+          pW = Math.round(l.pW * scale),
+          pH = Math.round(l.pH * scale);
+        ctx.fillStyle = "#1a100a";
+        ctx.fillRect(0, 0, W, H);
+        const gridW = l.cols * pW + (l.cols - 1) * GAP,
+          ox = Math.round((W - gridW) / 2);
+        for (let r = 0; r < l.rows; r++)
+          for (let c = 0; c < l.cols; c++) {
+            const x = ox + c * (pW + GAP),
+              y = PAD * 2 + r * (pH + GAP);
+            ctx.fillStyle = "#3a2010";
+            ctx.fillRect(x, y, pW, pH);
+            ctx.fillStyle = "#5a3820";
+            ctx.font = `${Math.max(7, Math.round(pH * 0.32))}px serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("👤", x + pW / 2, y + pH / 2);
+          }
+        ctx.fillStyle = "rgba(212,184,150,.5)";
+        ctx.font = `4px monospace`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText("THE DARKROOM", W / 2, H - 1);
+      }
+
+      // ── FILTER GRID ──────────────────────────────────────
+      function renderFilterGrid() {
+        document.getElementById("filter-row").innerHTML = FILTERS.map(
+          (f) => `
+    <div class="filter-card" id="filter-${f.id}" onclick="selectFilter(FILTERS.find(x=>x.id==='${f.id}'))">
+      <div class="filter-thumb" style="filter:${f.css}"><span>${f.icon}</span></div>
+      <div class="filter-name">${f.label}</div>
+    </div>`,
+        ).join("");
+      }
+      function renderFrameSwatches() {
+        document.getElementById("frame-swatches").innerHTML = FRAMES.map(
+          (f) =>
+            `<div class="frame-swatch" id="framesw-${f.id}" style="background:${f.color};color:${f.textColor};" onclick="selectFrame(FRAMES.find(x=>x.id==='${f.id}'))">${f.label}</div>`,
+        ).join("");
+      }
       function renderBorderSwatches() {
         const el = document.getElementById("border-swatches");
         if (!el) return;
         el.innerHTML = BORDER_COLORS.map(
-          (c) => `
-            <div class="border-swatch ${
-              c.hex === customizeState.borderColor ? "selected" : ""
-            }"
-              style="background:${c.hex};"
-              title="${c.label}"
-              onclick="selectBorderColor('${c.hex}')">
-            </div>
-          `,
+          (c) =>
+            `<div class="border-swatch ${c.hex === customizeState.borderColor ? "selected" : ""}" style="background:${c.hex};" onclick="selectBorderColor('${c.hex}')"></div>`,
         ).join("");
       }
-
-      function selectBorderColor(hex) {
-        customizeState.borderColor = hex;
-        const r = parseInt(hex.slice(1, 3), 16),
-          g = parseInt(hex.slice(3, 5), 16),
-          b = parseInt(hex.slice(5, 7), 16);
-        const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-        customizeState.textColor = lum > 0.5 ? "#3a2010" : "#d4b896";
-        renderBorderSwatches();
-        const picker = document.getElementById("custom-border-color");
-        if (picker) picker.value = hex;
-        rerenderStrip();
-      }
-
-      function setCustomBorderColor(hex) {
-        selectBorderColor(hex);
-      }
-
       function renderStickerPanel() {
         const tabs = document.getElementById("sticker-tabs");
         if (!tabs) return;
         tabs.innerHTML = Object.keys(STICKER_CATS)
           .map(
-            (cat) => `
-              <button class="sticker-tab ${
-                cat === customizeState.activeStickerCat ? "active" : ""
-              }"
-                onclick="switchStickerCat('${cat}')">${cat}</button>
-            `,
+            (cat) =>
+              `<button class="sticker-tab ${cat === customizeState.activeStickerCat ? "active" : ""}" onclick="switchStickerCat('${cat}')">${cat}</button>`,
           )
           .join("");
-        const grid = document.getElementById("sticker-grid");
-        grid.innerHTML = (STICKER_CATS[customizeState.activeStickerCat] || [])
+        document.getElementById("sticker-grid").innerHTML = (
+          STICKER_CATS[customizeState.activeStickerCat] || []
+        )
           .map(
-            (s) => `
-              <button class="sticker-btn" onclick="addStickerToStrip('${s}')" title="${s}">${s}</button>
-            `,
+            (s) =>
+              `<button class="sticker-btn" onclick="addStickerToStrip('${s}')">${s}</button>`,
           )
           .join("");
       }
-
       function switchStickerCat(cat) {
         customizeState.activeStickerCat = cat;
         renderStickerPanel();
       }
 
-      function addStickerToStrip(emoji) {
-        const cvs = document.getElementById("result-canvas");
-        if (!cvs.width || !cvs.height) return;
-        const x = 0.35 + Math.random() * 0.3;
-        const y = 0.3 + Math.random() * 0.4;
-        const s = { emoji, x, y, id: Date.now() + Math.random() };
-        customizeState.stickers.push(s);
-        renderStickerOverlay();
+      function selectFilter(f) {
+        state.filter = f;
+        document
+          .querySelectorAll(".filter-card")
+          .forEach((el) => el.classList.remove("selected"));
+        const el = document.getElementById("filter-" + f.id);
+        if (el) el.classList.add("selected");
+        const fpv = document.getElementById("filter-preview-video");
+        if (fpv) fpv.style.filter = f.css;
+        const lbl = document.getElementById("filter-live-label");
+        if (lbl) lbl.textContent = f.icon + " " + f.label.toUpperCase();
+        ["video-feed", "video-feed-mobile"].forEach((id) => {
+          const v = document.getElementById(id);
+          if (v) v.style.filter = f.css;
+        });
+        const badge = document.getElementById("filter-badge");
+        if (badge) badge.textContent = f.icon + " " + f.label.toUpperCase();
+      }
+      function selectFrame(f) {
+        state.frame = f.id;
+        document
+          .querySelectorAll(".frame-swatch")
+          .forEach((el) => el.classList.remove("selected"));
+        const el = document.getElementById("framesw-" + f.id);
+        if (el) el.classList.add("selected");
+      }
+      function selectBorderColor(hex) {
+        customizeState.borderColor = hex;
+        const r = parseInt(hex.slice(1, 3), 16),
+          g = parseInt(hex.slice(3, 5), 16),
+          b = parseInt(hex.slice(5, 7), 16);
+        customizeState.textColor =
+          (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.5
+            ? "#3a2010"
+            : "#d4b896";
+        renderBorderSwatches();
+        const pk = document.getElementById("custom-border-color");
+        if (pk) pk.value = hex;
+        rerenderStrip();
+      }
+      function setCustomBorderColor(hex) {
+        selectBorderColor(hex);
       }
 
-      function renderStickerOverlay() {
-        const layer = document.getElementById("sticker-layer");
-        const cvs = document.getElementById("result-canvas");
-        if (!layer || !cvs) return;
-        const cw = cvs.offsetWidth,
-          ch = cvs.offsetHeight;
-        layer.innerHTML = "";
-        customizeState.stickers.forEach((s, idx) => {
-          const el = document.createElement("div");
-          el.className = "placed-sticker";
-          el.style.left = s.x * cw + "px";
-          el.style.top = s.y * ch + "px";
-          el.style.fontSize = Math.max(20, cw * 0.08) + "px";
+      // ── STEP NAVIGATION ───────────────────────────────────
+      function goToStep(n) {
+        for (let i = 1; i <= 4; i++) {
+          const ind = document.getElementById("step" + i + "-indicator");
+          ind.classList.remove("active", "done");
+          if (i < n) ind.classList.add("done");
+          if (i === n) ind.classList.add("active");
+        }
 
-          const inner = document.createElement("span");
-          inner.textContent = s.emoji;
-          const del = document.createElement("span");
-          del.className = "del-btn";
-          del.textContent = "✕";
-          del.onclick = (e) => {
-            e.stopPropagation();
-            customizeState.stickers.splice(idx, 1);
-            renderStickerOverlay();
-          };
+        // Steps 1, 2, 4: show/hide panels inside .app-scroll
+        ["layout", "filter", "result"].forEach((name, idx) => {
+          const step = [1, 2, 4][idx];
+          document
+            .getElementById("panel-" + name)
+            .classList.toggle("active", step === n);
+        });
 
-          el.appendChild(inner);
-          el.appendChild(del);
-          makeDraggable(el, s, cvs);
-          layer.appendChild(el);
+        // Step 3: camera panel
+        const camPanel = document.getElementById("panel-camera");
+        const mainScroll = document.getElementById("main-scroll");
+        const header = document.querySelector("header");
+        const stepsBar = document.querySelector(".steps-bar");
+
+        if (n === 3) {
+          // Show camera: add .active class (CSS handles display + positioning)
+          camPanel.classList.add("active");
+          // On mobile: hide header+steps bar to maximise camera space
+          if (isMobileView()) {
+            header.style.display = "none";
+            stepsBar.style.display = "none";
+          }
+          // Hide main scroll area so it doesn't peek through on mobile
+          mainScroll.style.display = "none";
+        } else {
+          // Hide camera
+          camPanel.classList.remove("active");
+          // Restore header, steps bar, and scroll area
+          header.style.display = "";
+          stepsBar.style.display = "";
+          mainScroll.style.display = "";
+          mainScroll.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        state.currentStep = n;
+        if (n === 2) startFilterPreview();
+        else stopFilterPreview();
+        if (n === 3) {
+          startCamera();
+          setupShotTracker();
+        }
+      }
+
+      // ── FILTER PREVIEW CAMERA ─────────────────────────────
+      async function startFilterPreview() {
+        const vid = document.getElementById("filter-preview-video");
+        try {
+          if (state.filterStream)
+            state.filterStream.getTracks().forEach((t) => t.stop());
+          const s = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: "user",
+              width: { ideal: 640 },
+              height: { ideal: 480 },
+            },
+            audio: false,
+          });
+          state.filterStream = s;
+          vid.srcObject = s;
+          vid.style.transform = "scaleX(-1)";
+          vid.style.filter = state.filter ? state.filter.css : "none";
+        } catch (e) {
+          document.getElementById("filter-preview-box").style.display = "none";
+        }
+      }
+      function stopFilterPreview() {
+        if (state.filterStream) {
+          state.filterStream.getTracks().forEach((t) => t.stop());
+          state.filterStream = null;
+        }
+      }
+
+      // ── CAMERA ────────────────────────────────────────────
+      let isMirror = true;
+      function toggleMirror() {
+        isMirror = !isMirror;
+        ["video-feed", "video-feed-mobile"].forEach((id) => {
+          const v = document.getElementById(id);
+          if (v) v.style.transform = isMirror ? "scaleX(-1)" : "scaleX(1)";
+        });
+        const mb = document.getElementById("mirror-btn");
+        if (mb) mb.textContent = isMirror ? "↔ On" : "↔ Off";
+      }
+
+      async function startCamera() {
+        const mobile = isMobileView();
+        const videoId = mobile ? "video-feed-mobile" : "video-feed";
+        const video = document.getElementById(videoId);
+        try {
+          if (state.stream) state.stream.getTracks().forEach((t) => t.stop());
+          const s = await navigator.mediaDevices.getUserMedia({
+            video: {
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+              facingMode: "user",
+            },
+            audio: false,
+          });
+          state.stream = s;
+          video.srcObject = s;
+          video.style.filter = state.filter ? state.filter.css : "none";
+          video.style.transform = isMirror ? "scaleX(-1)" : "scaleX(1)";
+          const badge = document.getElementById("filter-badge");
+          if (badge && state.filter)
+            badge.textContent =
+              state.filter.icon + " " + state.filter.label.toUpperCase();
+          const sub = document.getElementById("camera-subtitle");
+          if (sub && state.layout)
+            sub.textContent =
+              "— Take " +
+              state.layout.shots +
+              " photo" +
+              (state.layout.shots > 1 ? "s" : "") +
+              " for your " +
+              state.layout.name +
+              " strip —";
+          const subM = document.getElementById("camera-subtitle-mobile");
+          if (subM && state.layout)
+            subM.textContent =
+              "Take " +
+              state.layout.shots +
+              " photo" +
+              (state.layout.shots > 1 ? "s" : "") +
+              ": " +
+              state.layout.name;
+          ["cam-error", "cam-error-d"].forEach((id) => {
+            const e = document.getElementById(id);
+            if (e) e.classList.remove("show");
+          });
+        } catch (e) {
+          ["cam-error", "cam-error-d"].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.classList.add("show");
+              el.innerHTML =
+                '<div class="icon">📷</div><p>Camera could not start.<br>Allow permissions and refresh.</p>';
+            }
+          });
+        }
+      }
+
+      function setupShotTracker() {
+        state.capturedPhotos = [];
+        const mobile = isMobileView();
+        const trackerId = mobile ? "shot-tracker-mobile" : "shot-tracker";
+        const tracker = document.getElementById(trackerId);
+        const retake = document.getElementById("retake-strip");
+        const n = state.layout.shots;
+        if (tracker) {
+          tracker.innerHTML = "";
+        }
+        if (retake) retake.innerHTML = "";
+        const otherId = mobile ? "shot-tracker" : "shot-tracker-mobile";
+        const other = document.getElementById(otherId);
+        if (other) other.innerHTML = "";
+        for (let i = 0; i < n; i++) {
+          ["shot-tracker", "shot-tracker-mobile"].forEach((tid) => {
+            const t2 = document.getElementById(tid);
+            if (!t2) return;
+            const dot = document.createElement("div");
+            dot.className = "shot-dot" + (i === 0 ? " current" : "");
+            dot.id = "dot-" + i + "-" + tid;
+            dot.textContent = i + 1;
+            t2.appendChild(dot);
+          });
+          if (retake) {
+            const rb = document.createElement("button");
+            rb.className = "retake-single";
+            rb.textContent = "Retake " + (i + 1);
+            rb.id = "retake-" + i;
+            rb.disabled = true;
+            rb.onclick = () => retakeSingle(i);
+            retake.appendChild(rb);
+          }
+        }
+        setStatus("Ready. Press shutter to capture.");
+      }
+
+      function setStatus(msg) {
+        ["cam-status", "cam-status-d"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = msg;
         });
       }
 
-      function makeDraggable(el, stickerObj, cvs) {
-        let startX, startY, startLeft, startTop;
-        el.addEventListener("mousedown", (e) => {
-          e.preventDefault();
-          startX = e.clientX;
-          startY = e.clientY;
-          startLeft = stickerObj.x * cvs.offsetWidth;
-          startTop = stickerObj.y * cvs.offsetHeight;
-          const onMove = (mv) => {
-            const dx = mv.clientX - startX,
-              dy = mv.clientY - startY;
-            const nx = Math.max(
-              0,
-              Math.min(1, (startLeft + dx) / cvs.offsetWidth),
-            );
-            const ny = Math.max(
-              0,
-              Math.min(1, (startTop + dy) / cvs.offsetHeight),
-            );
-            stickerObj.x = nx;
-            stickerObj.y = ny;
-            el.style.left = nx * cvs.offsetWidth + "px";
-            el.style.top = ny * cvs.offsetHeight + "px";
-          };
-          const onUp = () => {
-            document.removeEventListener("mousemove", onMove);
-            document.removeEventListener("mouseup", onUp);
-          };
-          document.addEventListener("mousemove", onMove);
-          document.addEventListener("mouseup", onUp);
+      function setTimer(t) {
+        state.timerDelay = t;
+        setTimerHighlight();
+      }
+      function setTimerHighlight() {
+        ["0", "3", "5", "10"].forEach((t) => {
+          ["timer-" + t, "timer-" + t + "m"].forEach((id) => {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            const on = parseInt(t) === state.timerDelay;
+            btn.style.borderColor = on ? "var(--warm)" : "";
+            btn.style.color = on ? "var(--cream)" : "";
+            btn.style.background = on ? "#2a1808" : "transparent";
+          });
         });
+      }
 
-        el.addEventListener(
-          "touchstart",
-          (e) => {
-            e.preventDefault();
-            const t = e.touches[0];
-            startX = t.clientX;
-            startY = t.clientY;
-            startLeft = stickerObj.x * cvs.offsetWidth;
-            startTop = stickerObj.y * cvs.offsetHeight;
-            const onMove = (mv) => {
-              const tt = mv.touches[0];
-              const nx = Math.max(
-                0,
-                Math.min(
-                  1,
-                  (startLeft + tt.clientX - startX) / cvs.offsetWidth,
-                ),
+      let timerInterval = null;
+      function startCapture() {
+        if (state.shooting) return;
+        const done = state.capturedPhotos.filter((x) => x != null).length;
+        if (done >= state.layout.shots) {
+          buildStrip(true);
+          return;
+        }
+        const slot = done;
+        state.shooting = true;
+        ["shutter-btn", "shutter-btn-mobile"].forEach((id) => {
+          const b = document.getElementById(id);
+          if (b) b.disabled = true;
+        });
+        if (state.timerDelay === 0) {
+          capturePhoto(slot);
+        } else {
+          let count = state.timerDelay;
+          ["countdown-display", "countdown-display-mobile"].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.textContent = count;
+              el.classList.add("show");
+            }
+          });
+          setStatus("Get ready...");
+          timerInterval = setInterval(() => {
+            count--;
+            if (count > 0) {
+              ["countdown-display", "countdown-display-mobile"].forEach(
+                (id) => {
+                  const el = document.getElementById(id);
+                  if (el) el.textContent = count;
+                },
               );
-              const ny = Math.max(
-                0,
-                Math.min(
-                  1,
-                  (startTop + tt.clientY - startY) / cvs.offsetHeight,
-                ),
+            } else {
+              clearInterval(timerInterval);
+              ["countdown-display", "countdown-display-mobile"].forEach(
+                (id) => {
+                  const el = document.getElementById(id);
+                  if (el) el.classList.remove("show");
+                },
               );
-              stickerObj.x = nx;
-              stickerObj.y = ny;
-              el.style.left = nx * cvs.offsetWidth + "px";
-              el.style.top = ny * cvs.offsetHeight + "px";
-            };
-            const onEnd = () => {
-              el.removeEventListener("touchmove", onMove);
-              el.removeEventListener("touchend", onEnd);
-            };
-            el.addEventListener("touchmove", onMove, { passive: false });
-            el.addEventListener("touchend", onEnd);
-          },
-          { passive: false },
+              capturePhoto(slot);
+            }
+          }, 1000);
+        }
+      }
+
+      function capturePhoto(slot) {
+        const mobile = isMobileView();
+        const video = document.getElementById(
+          mobile ? "video-feed-mobile" : "video-feed",
         );
-      }
-
-      function clearAllStickers() {
-        customizeState.stickers = [];
-        renderStickerOverlay();
-      }
-
-      async function burnStickers() {
-        const cvs = document.getElementById("result-canvas");
-        const ctx = cvs.getContext("2d");
-        if (!cvs.width || !cvs.height) return;
-
-        customizeState.stickers.forEach((s) => {
-          const px = s.x * cvs.width;
-          const py = s.y * cvs.height;
-          const fs = Math.max(40, cvs.width * 0.06);
-          ctx.font = `${fs}px serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText(s.emoji, px, py);
+        const canvas = document.createElement("canvas");
+        const vw = video.videoWidth || 640,
+          vh = video.videoHeight || 480;
+        canvas.width = vw;
+        canvas.height = vh;
+        const ctx = canvas.getContext("2d");
+        if (isMirror) {
+          ctx.translate(vw, 0);
+          ctx.scale(-1, 1);
+        }
+        ctx.drawImage(video, 0, 0, vw, vh);
+        if (isMirror) ctx.setTransform(1, 0, 0, 1, 0, 0);
+        const filtered = document.createElement("canvas");
+        filtered.width = vw;
+        filtered.height = vh;
+        const fctx = filtered.getContext("2d");
+        const fCSS = state.filter ? state.filter.css : "none";
+        if (fCSS && fCSS !== "none") fctx.filter = fCSS;
+        fctx.drawImage(canvas, 0, 0);
+        const dataURL = filtered.toDataURL("image/jpeg", 0.93);
+        state.capturedPhotos[slot] = dataURL;
+        ["flash-overlay", "flash-overlay-mobile"].forEach((id) => {
+          const fl = document.getElementById(id);
+          if (fl) {
+            fl.classList.add("flash");
+            setTimeout(() => fl.classList.remove("flash"), 140);
+          }
         });
-        customizeState.stickers = [];
-        renderStickerOverlay();
+        ["shot-tracker", "shot-tracker-mobile"].forEach((tid) => {
+          const dot = document.getElementById("dot-" + slot + "-" + tid);
+          if (dot) {
+            const img = document.createElement("img");
+            img.src = dataURL;
+            dot.innerHTML = "";
+            dot.appendChild(img);
+            dot.classList.add("taken");
+            dot.classList.remove("current");
+          }
+          const nd = document.getElementById("dot-" + (slot + 1) + "-" + tid);
+          if (nd) nd.classList.add("current");
+        });
+        const rb = document.getElementById("retake-" + slot);
+        if (rb) rb.disabled = false;
+        const next = slot + 1;
+        if (next < state.layout.shots) {
+          setStatus(
+            "Photo " +
+              (slot + 1) +
+              " captured! " +
+              (state.layout.shots - next) +
+              " more to go.",
+          );
+          state.shooting = false;
+          ["shutter-btn", "shutter-btn-mobile"].forEach((id) => {
+            const b = document.getElementById(id);
+            if (b) b.disabled = false;
+          });
+        } else {
+          setStatus("All done! Building your strip...");
+          setTimeout(() => buildStrip(true), 500);
+        }
       }
 
-      // ===== LIVE RE-RENDER =====
+      function retakeSingle(slot) {
+        if (state.shooting) return;
+        state.capturedPhotos[slot] = null;
+        ["shot-tracker", "shot-tracker-mobile"].forEach((tid) => {
+          const dot = document.getElementById("dot-" + slot + "-" + tid);
+          if (dot) {
+            dot.innerHTML = slot + 1;
+            dot.classList.remove("taken");
+            dot.classList.add("current");
+          }
+        });
+        for (let i = slot + 1; i < state.layout.shots; i++) {
+          state.capturedPhotos[i] = null;
+          ["shot-tracker", "shot-tracker-mobile"].forEach((tid) => {
+            const d = document.getElementById("dot-" + i + "-" + tid);
+            if (d) {
+              d.innerHTML = i + 1;
+              d.classList.remove("taken", "current");
+            }
+          });
+          const rb = document.getElementById("retake-" + i);
+          if (rb) rb.disabled = true;
+        }
+        ["shutter-btn", "shutter-btn-mobile"].forEach((id) => {
+          const b = document.getElementById(id);
+          if (b) b.disabled = false;
+        });
+        setStatus("Ready to retake photo " + (slot + 1) + ".");
+      }
+
+      function resetCamera() {
+        if (timerInterval) clearInterval(timerInterval);
+        state.shooting = false;
+        state.capturedPhotos = [];
+        setupShotTracker();
+        ["shutter-btn", "shutter-btn-mobile"].forEach((id) => {
+          const b = document.getElementById(id);
+          if (b) b.disabled = false;
+        });
+        ["countdown-display", "countdown-display-mobile"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove("show");
+        });
+      }
+
+      // ── STRIP BUILD ───────────────────────────────────────
       function rerenderStrip() {
         customizeState.showLabel =
           document.getElementById("show-label")?.checked ?? true;
@@ -2129,26 +2923,24 @@
 
       async function buildStrip(navigate = true) {
         state.shooting = false;
-        if (navigate && state.stream) {
+        if (navigate && state.stream)
           state.stream.getTracks().forEach((t) => t.stop());
-        }
-
-        const layout = state.layout;
-        const photos = state.capturedPhotos.filter(Boolean);
+        const layout = state.layout,
+          photos = state.capturedPhotos.filter(Boolean);
         if (!layout || photos.length === 0) return;
-
-        const PAD = 28;
-        const GAP = 10;
-        const PHOTO_W = 360;
-        const aspect = layout.pW > 0 ? layout.pH / layout.pW : 0.75;
-        const PHOTO_H = Math.round(PHOTO_W * aspect);
+        const PAD = 26,
+          GAP = 10,
+          PHOTO_W = 360;
+        const PHOTO_H = Math.round(
+          PHOTO_W * (layout.pW > 0 ? layout.pH / layout.pW : 0.75),
+        );
         const STRIP_W =
           PAD * 2 + layout.cols * PHOTO_W + (layout.cols - 1) * GAP;
-        const TOP_H = customizeState.showFilmHoles ? 44 : 12;
-        const BOTTOM_H = customizeState.showFilmHoles ? 50 : 12;
-        const LABEL_H = customizeState.showLabel ? 36 : 0;
-        const DATE_H =
-          customizeState.showDate || customizeState.showFilterName ? 22 : 0;
+        const TOP_H = customizeState.showFilmHoles ? 42 : 10,
+          BOT_H = customizeState.showFilmHoles ? 48 : 10;
+        const LABEL_H = customizeState.showLabel ? 34 : 0,
+          DATE_H =
+            customizeState.showDate || customizeState.showFilterName ? 20 : 0;
         const STRIP_H =
           TOP_H +
           PAD +
@@ -2157,105 +2949,85 @@
           PAD +
           LABEL_H +
           DATE_H +
-          BOTTOM_H;
-
+          BOT_H;
         const rc = document.getElementById("result-canvas");
         rc.width = STRIP_W;
         rc.height = STRIP_H;
         const ctx = rc.getContext("2d");
-
-        const borderColor = customizeState.borderColor;
-        const textColor = customizeState.textColor;
-
-        ctx.fillStyle = borderColor;
+        ctx.fillStyle = customizeState.borderColor;
         ctx.fillRect(0, 0, STRIP_W, STRIP_H);
-
         if (customizeState.showFilmHoles) {
-          drawFilmHolesHQ(ctx, borderColor, STRIP_W, 0, TOP_H);
-          drawFilmHolesHQ(
-            ctx,
-            borderColor,
-            STRIP_W,
-            STRIP_H - BOTTOM_H,
-            BOTTOM_H,
-          );
+          drawFilmHoles(ctx, STRIP_W, 0, TOP_H);
+          drawFilmHoles(ctx, STRIP_W, STRIP_H - BOT_H, BOT_H);
         }
-
-        const loadPromises = photos.map(
-          (src) =>
-            new Promise((res) => {
-              const img = new Image();
-              img.onload = () => res(img);
-              img.onerror = () => res(null);
-              img.src = src;
-            }),
+        const imgs = await Promise.all(
+          photos.map(
+            (src) =>
+              new Promise((res) => {
+                const img = new Image();
+                img.onload = () => res(img);
+                img.onerror = () => res(null);
+                img.src = src;
+              }),
+          ),
         );
-        const imgs = await Promise.all(loadPromises);
-
-        let photoIdx = 0;
-        for (let r = 0; r < layout.rows; r++) {
+        let idx = 0;
+        for (let r = 0; r < layout.rows; r++)
           for (let c = 0; c < layout.cols; c++) {
-            const x = PAD + c * (PHOTO_W + GAP);
-            const y = TOP_H + PAD + r * (PHOTO_H + GAP);
-
+            const x = PAD + c * (PHOTO_W + GAP),
+              y = TOP_H + PAD + r * (PHOTO_H + GAP);
             ctx.fillStyle = "#0d0805";
             ctx.fillRect(x, y, PHOTO_W, PHOTO_H);
-
-            const img = imgs[photoIdx];
+            const img = imgs[idx];
             if (img) {
               ctx.save();
               ctx.beginPath();
               ctx.rect(x, y, PHOTO_W, PHOTO_H);
               ctx.clip();
-              const scale = Math.max(PHOTO_W / img.width, PHOTO_H / img.height);
-              const sw = img.width * scale,
-                sh = img.height * scale;
-              const sx = x + (PHOTO_W - sw) / 2,
-                sy = y + (PHOTO_H - sh) / 2;
-              ctx.drawImage(img, sx, sy, sw, sh);
+              const sc = Math.max(PHOTO_W / img.width, PHOTO_H / img.height);
+              ctx.drawImage(
+                img,
+                x + (PHOTO_W - img.width * sc) / 2,
+                y + (PHOTO_H - img.height * sc) / 2,
+                img.width * sc,
+                img.height * sc,
+              );
               ctx.restore();
             } else {
               ctx.fillStyle = "#2a1808";
               ctx.fillRect(x, y, PHOTO_W, PHOTO_H);
             }
-
             if (customizeState.showVignette) {
-              const grad = ctx.createRadialGradient(
+              const vg = ctx.createRadialGradient(
                 x + PHOTO_W / 2,
                 y + PHOTO_H / 2,
-                PHOTO_H * 0.25,
+                PHOTO_H * 0.22,
                 x + PHOTO_W / 2,
                 y + PHOTO_H / 2,
-                PHOTO_H * 0.85,
+                PHOTO_H * 0.82,
               );
-              grad.addColorStop(0, "rgba(0,0,0,0)");
-              grad.addColorStop(1, "rgba(0,0,0,0.38)");
-              ctx.fillStyle = grad;
+              vg.addColorStop(0, "rgba(0,0,0,0)");
+              vg.addColorStop(1, "rgba(0,0,0,.38)");
+              ctx.fillStyle = vg;
               ctx.fillRect(x, y, PHOTO_W, PHOTO_H);
             }
-
-            ctx.strokeStyle = "rgba(0,0,0,0.3)";
+            ctx.strokeStyle = "rgba(0,0,0,.28)";
             ctx.lineWidth = 1;
             ctx.strokeRect(x, y, PHOTO_W, PHOTO_H);
-
-            photoIdx++;
+            idx++;
           }
-        }
-
         const labelY =
           TOP_H + PAD + layout.rows * PHOTO_H + (layout.rows - 1) * GAP + PAD;
-
         if (customizeState.showLabel) {
-          ctx.fillStyle = textColor;
-          ctx.font = `italic bold 18px ${customizeState.labelFont}`;
+          ctx.fillStyle = customizeState.textColor;
+          ctx.font = `italic bold 17px ${customizeState.labelFont}`;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.fillText(customizeState.label, STRIP_W / 2, labelY + 18);
+          ctx.fillText(customizeState.label, STRIP_W / 2, labelY + 16);
         }
-
         if (customizeState.showDate || customizeState.showFilterName) {
           const parts = [];
-          if (customizeState.showDate) {
+          if (customizeState.showDate)
             parts.push(
               new Date()
                 .toLocaleDateString("en-US", {
@@ -2265,521 +3037,47 @@
                 })
                 .toUpperCase(),
             );
-          }
-          if (customizeState.showFilterName) {
+          if (customizeState.showFilterName && state.filter)
             parts.push(state.filter.label.toUpperCase());
-          }
-          ctx.fillStyle = textColor;
-          ctx.globalAlpha = 0.65;
-          ctx.font = `10px "Courier Prime", monospace`;
+          ctx.fillStyle = customizeState.textColor;
+          ctx.globalAlpha = 0.6;
+          ctx.font = `9px "Courier Prime",monospace`;
           ctx.textAlign = "center";
           ctx.textBaseline = "alphabetic";
           ctx.fillText(
-            `♦ ${parts.join("  ·  ")} ♦`,
+            "♦ " + parts.join("  ·  ") + " ♦",
             STRIP_W / 2,
-            labelY + (customizeState.showLabel ? 40 : 16),
+            labelY + (customizeState.showLabel ? 36 : 14),
           );
           ctx.globalAlpha = 1;
         }
-
         if (navigate) {
           goToStep(4);
-          rc.style.maxHeight = "75vh";
+          rc.style.maxHeight = "68vh";
           rc.style.width = "auto";
           rc.style.maxWidth = "100%";
           setTimeout(renderStickerOverlay, 50);
-        } else {
-          setTimeout(renderStickerOverlay, 20);
-        }
+        } else setTimeout(renderStickerOverlay, 20);
       }
 
-      function drawFilmHolesHQ(ctx, borderColor, W, y, h) {
-        const hW = 10,
-          hH = 16,
-          gap = 22,
-          r = 3;
-        const count = Math.floor(W / gap);
+      function drawFilmHoles(ctx, W, y, h) {
+        const hW = 9,
+          hH = 15,
+          gap = 20,
+          r = 3,
+          count = Math.floor(W / gap);
         for (let i = 0; i < count; i++) {
-          const hx = i * gap + 4;
-          const hy = y + (h - hH) / 2;
-          ctx.fillStyle = "rgba(0,0,0,0.45)";
-          roundRectPath(ctx, hx, hy, hW, hH, r);
+          const hx = i * gap + 3,
+            hy = y + (h - hH) / 2;
+          ctx.fillStyle = "rgba(0,0,0,.45)";
+          rrect(ctx, hx, hy, hW, hH, r);
           ctx.fill();
-          ctx.fillStyle = "rgba(0,0,0,0.2)";
-          roundRectPath(ctx, hx + 1, hy + 1, hW - 2, hH - 2, r - 1);
+          ctx.fillStyle = "rgba(0,0,0,.2)";
+          rrect(ctx, hx + 1, hy + 1, hW - 2, hH - 2, r - 1);
           ctx.fill();
         }
       }
-
-      function renderLayoutGrid() {
-        const container = document.getElementById("layout-sections");
-        container.innerHTML = "";
-
-        LAYOUT_GROUPS.forEach((group) => {
-          const groupLayouts = LAYOUTS.filter((l) => l.group === group);
-
-          const sectionTitle = document.createElement("div");
-          sectionTitle.className = "layout-section-title";
-          sectionTitle.textContent = group;
-          container.appendChild(sectionTitle);
-
-          const grid = document.createElement("div");
-          grid.className = "layout-grid";
-
-          groupLayouts.forEach((l) => {
-            const card = document.createElement("div");
-            card.className = "layout-card";
-            card.id = "layout-" + l.id;
-            card.onclick = () => selectLayout(l);
-
-            const wrap = document.createElement("div");
-            wrap.className = "lc-strip-wrap";
-            const cvs = document.createElement("canvas");
-            cvs.className = "lc-strip-canvas";
-            const SCALE = 0.7;
-            cvs.width = l.sW * SCALE;
-            cvs.height = l.sH * SCALE;
-            cvs.style.width = l.sW * SCALE + "px";
-            cvs.style.height = l.sH * SCALE + "px";
-            drawStripPreview(cvs, l, SCALE);
-            wrap.appendChild(cvs);
-
-            const info = document.createElement("div");
-            info.className = "lc-info";
-            info.innerHTML = `
-              <div class="lc-name">${l.name}</div>
-              <div class="lc-meta">${l.shots} Photo${
-                l.shots > 1 ? "s" : ""
-              }</div>
-              <div class="lc-badge">${l.badge}</div>
-            `;
-
-            const check = document.createElement("div");
-            check.className = "lc-check";
-            check.textContent = "✓";
-
-            card.appendChild(check);
-            card.appendChild(wrap);
-            card.appendChild(info);
-            grid.appendChild(card);
-          });
-
-          container.appendChild(grid);
-        });
-      }
-
-      function drawStripPreview(cvs, l, scale) {
-        const ctx = cvs.getContext("2d");
-        const W = cvs.width,
-          H = cvs.height;
-        const PAD = Math.round(6 * scale);
-        const GAP = Math.round(4 * scale);
-        const pW = Math.round(l.pW * scale);
-        const pH = Math.round(l.pH * scale);
-
-        ctx.fillStyle = "#1a100a";
-        ctx.fillRect(0, 0, W, H);
-
-        drawMiniFilmHoles(ctx, W, 0, PAD, scale);
-
-        for (let r = 0; r < l.rows; r++) {
-          for (let c = 0; c < l.cols; c++) {
-            const x =
-              PAD +
-              c * (pW + GAP) +
-              Math.round(
-                (W - l.cols * pW - (l.cols - 1) * GAP) / 2 - PAD / 2 + PAD,
-              );
-            const y = PAD * 2 + r * (pH + GAP);
-
-            ctx.fillStyle = "#3a2010";
-            ctx.fillRect(x, y, pW, pH);
-
-            const g = ctx.createLinearGradient(x, y, x, y + pH);
-            g.addColorStop(0, "rgba(255,220,160,0.06)");
-            g.addColorStop(1, "rgba(0,0,0,0.2)");
-            ctx.fillStyle = g;
-            ctx.fillRect(x, y, pW, pH);
-
-            ctx.fillStyle = "#5a3820";
-            ctx.font = `${Math.max(10, Math.round(pH * 0.4))}px serif`;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText("👤", x + pW / 2, y + pH / 2);
-          }
-        }
-
-        const bottomY = H - PAD;
-        drawMiniFilmHoles(ctx, W, bottomY, PAD, scale);
-
-        ctx.fillStyle = "rgba(212,184,150,0.5)";
-        ctx.font = `${Math.round(5 * scale)}px "Courier Prime", monospace`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "alphabetic";
-        ctx.fillText("THE DARKROOM", W / 2, H - 2);
-      }
-
-      function drawMiniFilmHoles(ctx, W, y, size, scale) {
-        const hW = Math.round(4 * scale),
-          hH = Math.round(5 * scale);
-        const gap = Math.round(10 * scale);
-        const count = Math.floor(W / gap);
-        ctx.fillStyle = "rgba(0,0,0,0.55)";
-        for (let i = 0; i < count; i++) {
-          ctx.fillRect(i * gap + 2, y + (size - hH) / 2, hW, hH);
-        }
-      }
-
-      function renderFilterGrid() {
-        const g = document.getElementById("filter-grid");
-        g.innerHTML = FILTERS.map(
-          (f) => `
-            <div class="filter-card" id="filter-${f.id}"
-              onclick="selectFilter(FILTERS.find(x=>x.id==='${f.id}'))">
-              <div class="filter-thumb" style="filter:${f.css}">${f.icon}</div>
-              <div class="filter-name">${f.label}</div>
-            </div>
-          `,
-        ).join("");
-      }
-
-      function renderFrameSwatches() {
-        const g = document.getElementById("frame-swatches");
-        g.innerHTML = FRAMES.map(
-          (f) => `
-            <div class="frame-swatch" id="framesw-${f.id}"
-              style="background:${f.color};color:${f.textColor};"
-              title="${f.desc}"
-              onclick="selectFrame(FRAMES.find(x=>x.id==='${f.id}'))">
-              ${f.label}
-            </div>
-          `,
-        ).join("");
-      }
-
-      function selectLayout(l) {
-        state.layout = l;
-        document
-          .querySelectorAll(".layout-card")
-          .forEach((el) => el.classList.remove("selected"));
-        const el = document.getElementById("layout-" + l.id);
-        if (el) el.classList.add("selected");
-      }
-
-      function selectFilter(f) {
-        state.filter = f;
-        document
-          .querySelectorAll(".filter-card")
-          .forEach((el) => el.classList.remove("selected"));
-        const el = document.getElementById("filter-" + f.id);
-        if (el) el.classList.add("selected");
-        const vid = document.getElementById("video-feed");
-        if (vid) vid.style.filter = f.css;
-        const badge = document.getElementById("filter-badge");
-        if (badge) badge.textContent = f.icon + " " + f.label.toUpperCase();
-      }
-
-      function selectFrame(f) {
-        state.frame = f.id;
-        document
-          .querySelectorAll(".frame-swatch")
-          .forEach((el) => el.classList.remove("selected"));
-        const el = document.getElementById("framesw-" + f.id);
-        if (el) el.classList.add("selected");
-      }
-
-      function setTimer(t) {
-        state.timerDelay = t;
-        setTimerHighlight();
-      }
-
-      function setTimerHighlight() {
-        ["0", "3", "5", "10"].forEach((t) => {
-          const btn = document.getElementById("timer-" + t);
-          if (btn) {
-            const active = parseInt(t, 10) === state.timerDelay;
-            btn.style.borderColor = active ? "var(--warm)" : "";
-            btn.style.color = active ? "var(--cream)" : "";
-            btn.style.backgroundColor = active ? "#2a1808" : "transparent";
-          }
-        });
-      }
-
-      let isMirror = true;
-      function toggleMirror() {
-        isMirror = !isMirror;
-        const vid = document.getElementById("video-feed");
-        vid.style.transform = isMirror ? "scaleX(-1)" : "scaleX(1)";
-        document.getElementById("mirror-btn").textContent = isMirror
-          ? "↔ Mirror On"
-          : "↔ Mirror Off";
-      }
-
-      // ===== STEP NAVIGATION =====
-      function goToStep(n) {
-        for (let i = 1; i <= 4; i++) {
-          const ind = document.getElementById("step" + i + "-indicator");
-          ind.classList.remove("active", "done");
-          if (i < n) ind.classList.add("done");
-          if (i === n) ind.classList.add("active");
-        }
-        ["layout", "filter", "camera", "result"].forEach((name, i) => {
-          document
-            .getElementById("panel-" + name)
-            .classList.toggle("active", i + 1 === n);
-        });
-        state.currentStep = n;
-
-        window.scrollTo({
-          top: document.querySelector(".app-container").offsetTop - 90,
-          behavior: "smooth",
-        });
-
-        if (n === 3) {
-          startCamera();
-          setupShotTracker();
-        }
-      }
-
-      // ===== CAMERA =====
-      async function startCamera() {
-        const video = document.getElementById("video-feed");
-        const camErr = document.getElementById("cam-error");
-        const camArea = document.getElementById("camera-area");
-
-        try {
-          if (state.stream) {
-            state.stream.getTracks().forEach((t) => t.stop());
-          }
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-              width: { ideal: 1280 },
-              height: { ideal: 720 },
-              facingMode: "user",
-            },
-            audio: false,
-          });
-          state.stream = stream;
-          video.srcObject = stream;
-          video.style.filter = state.filter ? state.filter.css : "none";
-          video.style.transform = isMirror ? "scaleX(-1)" : "scaleX(1)";
-          camErr.classList.remove("show");
-          camArea.style.display = "";
-          document.getElementById("filter-badge").textContent =
-            state.filter.icon + " " + state.filter.label.toUpperCase();
-          document.getElementById("camera-subtitle").textContent =
-            "— Take " +
-            state.layout.shots +
-            " photo" +
-            (state.layout.shots > 1 ? "s" : "") +
-            " for your " +
-            state.layout.name +
-            " strip —";
-        } catch (e) {
-          camErr.classList.add("show");
-          camArea.style.display = "none";
-        }
-      }
-
-      function setupShotTracker() {
-        state.capturedPhotos = [];
-        const tracker = document.getElementById("shot-tracker");
-        const retake = document.getElementById("retake-strip");
-        const n = state.layout.shots;
-        tracker.innerHTML = "";
-        retake.innerHTML = "";
-        for (let i = 0; i < n; i++) {
-          const dot = document.createElement("div");
-          dot.className = "shot-dot" + (i === 0 ? " current" : "");
-          dot.id = "dot-" + i;
-          dot.textContent = i + 1;
-          tracker.appendChild(dot);
-          const rb = document.createElement("button");
-          rb.className = "retake-single";
-          rb.textContent = "Retake " + (i + 1);
-          rb.id = "retake-" + i;
-          rb.disabled = true;
-          rb.onclick = () => retakeSingle(i);
-          retake.appendChild(rb);
-        }
-        document.getElementById("cam-status").textContent =
-          "Ready to shoot. Press the shutter or Space bar.";
-      }
-
-      let timerInterval = null;
-      function startCapture() {
-        if (state.shooting) return;
-        const done = state.capturedPhotos.filter(
-          (x) => x !== null && x !== undefined,
-        ).length;
-        let slot = done;
-        if (slot >= state.layout.shots) {
-          buildStrip(true);
-          return;
-        }
-        state.shooting = true;
-        document.getElementById("shutter-btn").disabled = true;
-
-        if (state.timerDelay === 0) {
-          capturePhoto(slot);
-        } else {
-          let count = state.timerDelay;
-          const cd = document.getElementById("countdown-display");
-          cd.textContent = count;
-          cd.classList.add("show");
-          document.getElementById("cam-status").textContent = "Get ready...";
-          timerInterval = setInterval(() => {
-            count--;
-            if (count > 0) {
-              cd.textContent = count;
-            } else {
-              clearInterval(timerInterval);
-              cd.classList.remove("show");
-              capturePhoto(slot);
-            }
-          }, 1000);
-        }
-      }
-
-      function capturePhoto(slot) {
-        const video = document.getElementById("video-feed");
-        const canvas = document.getElementById("camera-canvas");
-        const ctx = canvas.getContext("2d");
-        const vw = video.videoWidth || 640;
-        const vh = video.videoHeight || 480;
-        canvas.width = vw;
-        canvas.height = vh;
-
-        if (isMirror) {
-          ctx.translate(vw, 0);
-          ctx.scale(-1, 1);
-        }
-        ctx.drawImage(video, 0, 0, vw, vh);
-        if (isMirror) ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-        applyCanvasFilter(ctx, canvas, state.filter.id);
-
-        const dataURL = canvas.toDataURL("image/jpeg", 0.95);
-        state.capturedPhotos[slot] = dataURL;
-
-        const fl = document.getElementById("flash-overlay");
-        fl.classList.add("flash");
-        setTimeout(() => fl.classList.remove("flash"), 150);
-
-        const dot = document.getElementById("dot-" + slot);
-        if (dot) {
-          const img = document.createElement("img");
-          img.src = dataURL;
-          dot.innerHTML = "";
-          dot.appendChild(img);
-          dot.classList.add("taken");
-          dot.classList.remove("current");
-        }
-
-        const rb = document.getElementById("retake-" + slot);
-        if (rb) rb.disabled = false;
-
-        const next = slot + 1;
-        if (next < state.layout.shots) {
-          const nd = document.getElementById("dot-" + next);
-          if (nd) nd.classList.add("current");
-          document.getElementById("cam-status").textContent =
-            "Photo " +
-            (slot + 1) +
-            " captured. " +
-            (state.layout.shots - next) +
-            " left.";
-          state.shooting = false;
-          document.getElementById("shutter-btn").disabled = false;
-        } else {
-          document.getElementById("cam-status").textContent =
-            "All photos captured. Building your strip...";
-          setTimeout(() => {
-            buildStrip(true);
-          }, 600);
-        }
-      }
-
-      function applyCanvasFilter(ctx, canvas, filterId) {
-        if (filterId === "none") return;
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-
-        for (let i = 0; i < data.length; i += 4) {
-          let r = data[i],
-            g = data[i + 1],
-            b = data[i + 2];
-
-          if (filterId === "sepia") {
-            data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
-            data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
-            data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
-          } else if (filterId === "bw" || filterId === "noir") {
-            const avg = r * 0.299 + g * 0.587 + b * 0.114;
-            const v = filterId === "noir" ? Math.min(255, avg * 1.3) : avg;
-            data[i] = data[i + 1] = data[i + 2] = Math.min(255, v);
-          } else if (filterId === "fade") {
-            data[i] = Math.min(255, r * 0.8 + 40);
-            data[i + 1] = Math.min(255, g * 0.78 + 36);
-            data[i + 2] = Math.min(255, b * 0.76 + 30);
-          } else if (filterId === "warm" || filterId === "amber") {
-            data[i] = Math.min(255, r * 1.1);
-            data[i + 1] = Math.min(255, g * 1.02);
-            data[i + 2] = Math.min(255, b * 0.85);
-          } else if (filterId === "cool") {
-            data[i] = Math.min(255, r * 0.9);
-            data[i + 1] = Math.min(255, g * 0.95);
-            data[i + 2] = Math.min(255, b * 1.15);
-          } else if (filterId === "vivid") {
-            const avg = (r + g + b) / 3;
-            data[i] = Math.min(255, avg + (r - avg) * 1.6);
-            data[i + 1] = Math.min(255, avg + (g - avg) * 1.6);
-            data[i + 2] = Math.min(255, avg + (b - avg) * 1.6);
-          } else if (filterId === "rosy") {
-            data[i] = Math.min(255, r * 1.1);
-            data[i + 1] = Math.min(255, g * 0.92);
-            data[i + 2] = Math.min(255, b * 0.98);
-          }
-        }
-        ctx.putImageData(imageData, 0, 0);
-      }
-
-      function retakeSingle(slot) {
-        if (state.shooting) return;
-        state.capturedPhotos[slot] = null;
-        const dot = document.getElementById("dot-" + slot);
-        if (dot) {
-          dot.innerHTML = slot + 1;
-          dot.classList.remove("taken");
-          dot.classList.add("current");
-        }
-        for (let i = slot + 1; i < state.layout.shots; i++) {
-          state.capturedPhotos[i] = null;
-          const d = document.getElementById("dot-" + i);
-          if (d) {
-            d.innerHTML = i + 1;
-            d.classList.remove("taken", "current");
-          }
-          const rb = document.getElementById("retake-" + i);
-          if (rb) rb.disabled = true;
-        }
-        document.getElementById("shutter-btn").disabled = false;
-        document.getElementById("cam-status").textContent =
-          "Ready to retake photo " + (slot + 1) + ".";
-      }
-
-      function resetCamera() {
-        if (timerInterval) clearInterval(timerInterval);
-        state.shooting = false;
-        state.capturedPhotos = [];
-        setupShotTracker();
-        document.getElementById("shutter-btn").disabled = false;
-        document.getElementById("countdown-display").classList.remove("show");
-        document.getElementById("cam-status").textContent =
-          "Ready to shoot. Press the shutter or Space bar.";
-      }
-
-      function roundRectPath(ctx, x, y, w, h, r) {
+      function rrect(ctx, x, y, w, h, r) {
         ctx.beginPath();
         ctx.moveTo(x + r, y);
         ctx.lineTo(x + w - r, y);
@@ -2793,28 +3091,142 @@
         ctx.closePath();
       }
 
-      // ===== DOWNLOAD =====
+      // ── STICKERS ──────────────────────────────────────────
+      function addStickerToStrip(emoji) {
+        const cvs = document.getElementById("result-canvas");
+        if (!cvs.width) return;
+        customizeState.stickers.push({
+          emoji,
+          x: 0.35 + Math.random() * 0.3,
+          y: 0.3 + Math.random() * 0.4,
+          id: Date.now() + Math.random(),
+        });
+        renderStickerOverlay();
+      }
+      function renderStickerOverlay() {
+        const layer = document.getElementById("sticker-layer"),
+          cvs = document.getElementById("result-canvas");
+        if (!layer || !cvs) return;
+        const cw = cvs.offsetWidth,
+          ch = cvs.offsetHeight;
+        layer.innerHTML = "";
+        customizeState.stickers.forEach((s, idx) => {
+          const el = document.createElement("div");
+          el.className = "placed-sticker";
+          el.style.left = s.x * cw + "px";
+          el.style.top = s.y * ch + "px";
+          el.style.fontSize = Math.max(18, cw * 0.07) + "px";
+          const inner = document.createElement("span");
+          inner.textContent = s.emoji;
+          const del = document.createElement("span");
+          del.className = "del-btn";
+          del.textContent = "✕";
+          del.onclick = (e) => {
+            e.stopPropagation();
+            customizeState.stickers.splice(idx, 1);
+            renderStickerOverlay();
+          };
+          el.appendChild(inner);
+          el.appendChild(del);
+          makeDraggable(el, s, cvs);
+          layer.appendChild(el);
+        });
+      }
+      function makeDraggable(el, sObj, cvs) {
+        let sx, sy, sl, st;
+        el.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          sx = e.clientX;
+          sy = e.clientY;
+          sl = sObj.x * cvs.offsetWidth;
+          st = sObj.y * cvs.offsetHeight;
+          const mv = (e) => {
+            sObj.x = Math.max(
+              0,
+              Math.min(1, (sl + e.clientX - sx) / cvs.offsetWidth),
+            );
+            sObj.y = Math.max(
+              0,
+              Math.min(1, (st + e.clientY - sy) / cvs.offsetHeight),
+            );
+            el.style.left = sObj.x * cvs.offsetWidth + "px";
+            el.style.top = sObj.y * cvs.offsetHeight + "px";
+          };
+          const up = () => {
+            document.removeEventListener("mousemove", mv);
+            document.removeEventListener("mouseup", up);
+          };
+          document.addEventListener("mousemove", mv);
+          document.addEventListener("mouseup", up);
+        });
+        el.addEventListener(
+          "touchstart",
+          (e) => {
+            e.preventDefault();
+            const t = e.touches[0];
+            sx = t.clientX;
+            sy = t.clientY;
+            sl = sObj.x * cvs.offsetWidth;
+            st = sObj.y * cvs.offsetHeight;
+            const mv = (e) => {
+              const tt = e.touches[0];
+              sObj.x = Math.max(
+                0,
+                Math.min(1, (sl + tt.clientX - sx) / cvs.offsetWidth),
+              );
+              sObj.y = Math.max(
+                0,
+                Math.min(1, (st + tt.clientY - sy) / cvs.offsetHeight),
+              );
+              el.style.left = sObj.x * cvs.offsetWidth + "px";
+              el.style.top = sObj.y * cvs.offsetHeight + "px";
+            };
+            const up = () => {
+              el.removeEventListener("touchmove", mv);
+              el.removeEventListener("touchend", up);
+            };
+            el.addEventListener("touchmove", mv, { passive: false });
+            el.addEventListener("touchend", up);
+          },
+          { passive: false },
+        );
+      }
+      function clearAllStickers() {
+        customizeState.stickers = [];
+        renderStickerOverlay();
+      }
+      async function burnStickers() {
+        const cvs = document.getElementById("result-canvas");
+        const ctx = cvs.getContext("2d");
+        if (!cvs.width) return;
+        customizeState.stickers.forEach((s) => {
+          const fs = Math.max(36, cvs.width * 0.055);
+          ctx.font = `${fs}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(s.emoji, s.x * cvs.width, s.y * cvs.height);
+        });
+        customizeState.stickers = [];
+        renderStickerOverlay();
+      }
+
+      // ── DOWNLOAD / EMAIL ──────────────────────────────────
       async function downloadStrip() {
         await burnStickers();
         const rc = document.getElementById("result-canvas");
-        if (!rc.width || !rc.height) return;
+        if (!rc.width) return;
         const link = document.createElement("a");
-        const filename = "darkroom-strip-" + Date.now() + ".png";
-        link.download = filename;
+        link.download = "darkroom-strip-" + Date.now() + ".png";
         link.href = rc.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
       }
-
-      // ===== EMAIL (Option 2: open mail client) =====
       async function sendEmail() {
-        const input = document.getElementById("email-input");
-        const email = input.value.trim();
-        const successMsg = document.getElementById("email-success");
-
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
+        const input = document.getElementById("email-input"),
+          email = input.value.trim(),
+          successMsg = document.getElementById("email-success");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           input.style.borderColor = "#c44040";
           input.focus();
           setTimeout(() => {
@@ -2822,11 +3234,9 @@
           }, 1500);
           return;
         }
-
         await burnStickers();
         const rc = document.getElementById("result-canvas");
-        if (!rc.width || !rc.height) return;
-
+        if (!rc.width) return;
         const filename = "darkroom-strip-" + Date.now() + ".png";
         const link = document.createElement("a");
         link.download = filename;
@@ -2834,33 +3244,24 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-        const subject = encodeURIComponent("Your Darkroom Photo Strip");
-        const lines = [
-          "Your vintage photo strip has been downloaded to your device.",
-          "",
-          "Please attach the image file named:",
-          filename,
-          "",
-          "Strip details:",
-          "• Layout: " + (state.layout ? state.layout.name : "N/A"),
-          "• Filter: " + (state.filter ? state.filter.label : "N/A"),
-          "• Date: " + new Date().toLocaleDateString(),
-          "",
-          "Thank you for using The Darkroom.",
-        ];
-        const body = encodeURIComponent(lines.join("\n"));
-
         window.location.href =
-          "mailto:" + email + "?subject=" + subject + "&body=" + body;
-
+          "mailto:" +
+          email +
+          "?subject=" +
+          encodeURIComponent("Your Darkroom Photo Strip") +
+          "&body=" +
+          encodeURIComponent(
+            "Attach: " +
+              filename +
+              "\nLayout: " +
+              state.layout?.name +
+              "\nFilter: " +
+              state.filter?.label,
+          );
         input.value = "";
         successMsg.classList.add("show");
-        setTimeout(() => {
-          successMsg.classList.remove("show");
-        }, 5000);
+        setTimeout(() => successMsg.classList.remove("show"), 5000);
       }
-
       function startNewSession() {
         customizeState.stickers = [];
         state.capturedPhotos = [];
