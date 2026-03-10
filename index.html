@@ -962,42 +962,39 @@
 
       /* ═══ STICKY NEXT FOOTER — all screen sizes ═══ */
       .sticky-footer {
-        display: none; /* JS controls visibility per step */
+        display: none;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 150;
-        background: linear-gradient(to top, var(--bg) 60%, transparent);
-        padding: 14px 20px 18px;
+        background: var(--bg);
+        border-top: 1px solid var(--border);
+        padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+        flex-direction: column;
+        gap: 6px;
         pointer-events: none;
-        align-items: center;
-        justify-content: center;
       }
       .sticky-footer .btn {
         pointer-events: all;
         width: 100%;
-        max-width: 480px;
-        display: flex;
         justify-content: center;
-        font-size: 0.75rem;
-        padding: 13px 24px;
-        box-shadow:
-          0 4px 0 var(--sepia),
-          0 8px 28px rgba(0, 0, 0, 0.6);
+        font-size: 0.72rem;
+        padding: 12px 16px;
       }
-      .sticky-footer-multi {
-        gap: 8px;
+      .sticky-footer .btn-gold {
+        box-shadow: 0 3px 0 var(--sepia);
       }
-      .sticky-footer-multi .btn {
-        width: auto;
-        max-width: none;
+      /* Row inside footer */
+      .sf-row {
+        display: flex;
+        gap: 6px;
+        width: 100%;
+        pointer-events: none;
+      }
+      .sf-row .btn {
+        pointer-events: all;
         flex: 1;
-        max-width: 200px;
-      }
-      .sticky-footer-multi .btn-gold {
-        flex: 2;
-        max-width: 300px;
       }
       /* Hide inline next buttons — replaced by sticky footer everywhere */
       .hide-mobile-action {
@@ -1997,24 +1994,17 @@
     </div>
 
     <!-- STICKY FOOTER: Filter step -->
-    <div
-      class="sticky-footer sticky-footer-multi"
-      id="sticky-filter"
-      style="display: none"
-    >
-      <button class="btn btn-ghost btn-sm" onclick="goStep(1)">← Back</button>
+    <div class="sticky-footer" id="sticky-filter" style="display: none">
       <button class="btn btn-gold" onclick="goStep(3)">
         Next: Take Photos →
       </button>
+      <div class="sf-row">
+        <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+      </div>
     </div>
 
     <!-- STICKY FOOTER: Select step -->
-    <div
-      class="sticky-footer sticky-footer-multi"
-      id="sticky-select"
-      style="display: none"
-    >
-      <button class="btn btn-ghost btn-sm" onclick="goStep(3)">← Retake</button>
+    <div class="sticky-footer" id="sticky-select" style="display: none">
       <button
         class="btn btn-gold"
         id="sel-next-btn"
@@ -2023,21 +2013,29 @@
       >
         Build Strip →
       </button>
+      <div class="sf-row">
+        <button class="btn btn-ghost" onclick="goStep(3)">← Retake</button>
+      </div>
     </div>
 
     <!-- STICKY FOOTER: Result step -->
-    <div
-      class="sticky-footer sticky-footer-multi"
-      id="sticky-result"
-      style="display: none"
-    >
-      <button class="btn btn-gold" onclick="downloadStrip()" id="dl-btn">
-        ⬇ Save / Share
-      </button>
-      <button class="btn btn-ghost btn-sm" onclick="goStep(35)">
-        ← Reselect
-      </button>
-      <button class="btn btn-ghost btn-sm" onclick="startNew()">↺ New</button>
+    <div class="sticky-footer" id="sticky-result" style="display: none">
+      <div class="sf-row">
+        <button class="btn btn-gold" onclick="downloadStrip()" id="dl-btn">
+          📲 Save to Photos
+        </button>
+        <button
+          class="btn btn-gold"
+          onclick="downloadStripFile()"
+          id="dl-file-btn"
+        >
+          ⬇ Download
+        </button>
+      </div>
+      <div class="sf-row">
+        <button class="btn btn-ghost" onclick="goStep(35)">← Reselect</button>
+        <button class="btn btn-ghost" onclick="startNew()">↺ New Strip</button>
+      </div>
     </div>
 
     <!-- CAMERA PAGE (full height, outside scroll) -->
@@ -2895,9 +2893,7 @@
         const isIOS =
           /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isAndroid = /Android/.test(navigator.userAgent);
-        const dlBtn = document.getElementById("dl-btn");
-        if (dlBtn && (isIOS || isAndroid))
-          dlBtn.textContent = "📲 Save to Photos";
+        // Both buttons always visible on all devices
         // Init sticky footers: layout (step 1) is visible, others hidden
         const sfFilter = document.getElementById("sticky-filter");
         if (sfFilter) sfFilter.style.display = "none";
@@ -3891,6 +3887,14 @@
           rc.style.maxWidth = "100%";
           setTimeout(renderStickerOverlay, 60);
         } else setTimeout(renderStickerOverlay, 20);
+        // Pre-bake blob so iOS share() fires with no awaits in the gesture chain
+        rc.toBlob(
+          (b) => {
+            _stripBlob = b;
+          },
+          "image/png",
+          0.95,
+        );
       }
 
       function drawFilmHoles(ctx, W, y, h) {
@@ -4057,59 +4061,72 @@
         _stripBlobDirty = true; // will be resolved on next save tap
       }
 
-      async function downloadStrip() {
-        // 1. Burn stickers into canvas first (needed before toBlob)
+      function downloadStrip() {
+        // iOS Safari: share() MUST be called with no awaits before it — use pre-baked blob
+        const rc = document.getElementById("result-canvas");
+        if (!rc || !rc.width) return;
+        const filename = "darkroom-strip-" + Date.now() + ".png";
+
+        // Burn any stickers synchronously onto canvas before sharing
+        const ctx = rc.getContext("2d");
+        cust.stickers.forEach((s) => {
+          const fs = Math.max(36, rc.width * 0.055);
+          ctx.font = `${fs}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(s.emoji, s.x * rc.width, s.y * rc.height);
+        });
+        cust.stickers = [];
+        renderStickerOverlay();
+
+        // Use pre-baked blob if available, else bake now
+        const doShare = (blob) => {
+          if (!blob) return;
+          const file = new File([blob], filename, { type: "image/png" });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator
+              .share({ files: [file], title: "My Darkroom Strip" })
+              .catch((e) => {
+                if (e.name !== "AbortError")
+                  _showSaveOverlay(URL.createObjectURL(blob));
+              });
+          } else {
+            // Desktop fallback
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.download = filename;
+            a.href = url;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 60000);
+          }
+        };
+
+        if (_stripBlob) {
+          doShare(_stripBlob);
+          _stripBlob = null;
+        } else {
+          rc.toBlob(doShare, "image/png", 0.95);
+        }
+      }
+
+      // Standard file download — always saves to Downloads folder
+      async function downloadStripFile() {
         await burnStickers();
         const rc = document.getElementById("result-canvas");
         if (!rc.width) return;
-
         const filename = "darkroom-strip-" + Date.now() + ".png";
-        const isIOS =
-          /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isAndroid = /Android/.test(navigator.userAgent);
-        const isMobile = isIOS || isAndroid;
-
-        if (isMobile && navigator.share) {
-          // On iOS/Android: convert to blob then share — Safari allows share()
-          // after toBlob as long as it's initiated from a direct tap handler
-          rc.toBlob(
-            async (blob) => {
-              if (!blob) return;
-              const file = new File([blob], filename, { type: "image/png" });
-              try {
-                await navigator.share({
-                  files: [file],
-                  title: "My Darkroom Strip",
-                  text: 'Tap "Save Image" to add to your Photos',
-                });
-              } catch (e) {
-                if (e.name !== "AbortError") {
-                  // Share failed — open image in new tab so user can long-press → Save to Photos
-                  const url = URL.createObjectURL(blob);
-                  const w = window.open(url, "_blank");
-                  if (!w) {
-                    // Popup blocked: show the image in a full-screen overlay with instructions
-                    _showSaveOverlay(url);
-                  }
-                }
-              }
-            },
-            "image/png",
-            0.95,
-          );
-        } else {
-          // Desktop: standard file download
-          const url = URL.createObjectURL(
-            await new Promise((res) => rc.toBlob(res, "image/png", 0.95)),
-          );
-          const link = document.createElement("a");
-          link.download = filename;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          setTimeout(() => URL.revokeObjectURL(url), 60000);
-        }
+        const url = URL.createObjectURL(
+          await new Promise((res) => rc.toBlob(res, "image/png", 0.95)),
+        );
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
       }
 
       // Fallback overlay: shows the image fullscreen so user can long-press Save to Photos
